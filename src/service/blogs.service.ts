@@ -1,6 +1,6 @@
 import { PrismaClient } from "../../generated/prisma/index.js"
-import { type BlogDataDTO } from "../dtos/blog.dto.js";
-import { createError } from "../models/response.js";
+import { type BlogDataDTO, type CreateBlogPayloadDTO } from "../dtos/blog.dto.js";
+import { createError } from "../utils/handle-response.js";
 
 const prisma = new PrismaClient();
 
@@ -43,11 +43,11 @@ const BlogsService = () => {
         return convertedResult
     }
 
-    const getDetailBlog = async (id: number) => {
+    const getDetailBlog = async (blogId: number) => {
 
         const result = await prisma.blogs.findUnique({
             where: {
-                blog_id: id
+                blog_id: blogId
             },
             select: {
                 blog_id: true,
@@ -80,7 +80,59 @@ const BlogsService = () => {
         return convertResul
     }
 
-    return { getAllBlogs, getDetailBlog }
+
+    const addBlog = async (BlogPayload: CreateBlogPayloadDTO) => {
+        const result = await prisma.blogs.create({
+            data: {
+                title: BlogPayload.title,
+                blog: BlogPayload.blog,
+                images: BlogPayload.images,
+                author_id: BlogPayload.author_id
+            }
+        })
+
+        if (!result) {
+            throw createError("Failed add blog", 404);
+        }
+        return result
+    }
+
+
+    const editBlog = async (BlogPayload: CreateBlogPayloadDTO, blogId: number) => {
+
+        const result = await prisma.blogs.update({
+            where: { blog_id: blogId },
+            data: {
+                title: BlogPayload.title,
+                blog: BlogPayload.blog,
+                images: BlogPayload.images,
+                author_id: BlogPayload.author_id
+            }
+        })
+
+        if (!result) {
+            throw createError("Failed edit blog", 404);
+        }
+        return result
+    }
+
+
+
+    const deleteBlog = async (blogId: number) => {
+
+        const result = await prisma.blogs.delete({
+            where: {
+                blog_id: blogId
+            }
+        })
+
+        if (!result) {
+            throw createError("Failed delete blog", 404);
+        }
+        return result
+    }
+
+    return { getAllBlogs, getDetailBlog, addBlog, editBlog, deleteBlog }
 }
 
 export default BlogsService
