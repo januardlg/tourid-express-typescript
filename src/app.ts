@@ -6,6 +6,7 @@ import { unexpectedErrorHandler } from './middlewares/unexpected-error-handler.j
 
 // import routes
 import indexRoutes from './routes/index.js'
+import blogRoutes from './routes/blogs.js'
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 // insert to app
 app.use('/', indexRoutes)
+app.use('/blogs', blogRoutes)
 
 // Global error handler (should be after routes)
 // app.use(errorHandler);

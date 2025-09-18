@@ -10,7 +10,7 @@ export const unexpectedErrorHandler = (
     res: Response,
     next: NextFunction
 ) => {
-    console.error(err);
+    console.error("err", err);
     res.status(err.status || 500).json({
         message: err.message || 'Internal Server Error',
     });

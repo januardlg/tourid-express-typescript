@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model blogs {
+  blog_id    Int      @id @default(autoincrement())
+  title      String   @db.VarChar(250)
+  blog       String
+  images     String?
+  author_id  Int?
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  users      users?   @relation(fields: [author_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model hostelry_partner {
+  hostelry_id          Int                    @id @default(autoincrement())
+  hostelry_name        String?                @db.VarChar(100)
+  hostelry_address     String?                @db.VarChar(250)
+  hostelry_level       Int?
+  package_tour_product package_tour_product[]
+}
+
+model order_package_tour {
+  order_tour_package_id             Int                                 @id @default(autoincrement())
+  tour_package_id                   Int
+  customer_id                       Int
+  status                            statustour
+  payment_method                    paymentmethod
+  number_of_guests                  Int
+  created_at                        DateTime                            @default(now()) @db.Timestamp(6)
+  updated_at                        DateTime                            @default(now()) @db.Timestamp(6)
+  total_payment                     Decimal                             @db.Decimal
+  users                             users                               @relation(fields: [customer_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  package_tour_product              package_tour_product                @relation(fields: [tour_package_id], references: [package_id], onDelete: NoAction, onUpdate: NoAction)
+  payment_order_package_transaction payment_order_package_transaction[]
+}
+
+model package_tour_product {
+  package_id          Int                  @id @default(autoincrement())
+  name_package        String?              @db.VarChar(100)
+  cost                Decimal?             @db.Decimal
+  description         String?
+  start_date          DateTime?            @db.Date
+  end_date            DateTime?            @db.Date
+  activities          Json?                @db.Json
+  created_at          DateTime             @default(now()) @db.Timestamp(6)
+  updated_at          DateTime             @default(now()) @db.Timestamp(6)
+  hostelry_partner_id Int?
+  order_package_tour  order_package_tour[]
+  hostelry_partner    hostelry_partner?    @relation(fields: [hostelry_partner_id], references: [hostelry_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_hostelry_partner")
+}
+
+model payment_order_package_transaction {
+  payment_package_id Int                @id @default(autoincrement())
+  order_package_id   Int
+  payment_status     paymentstatus
+  totalamount        Decimal            @db.Decimal
+  source             String             @db.VarChar(250)
+  created_at         DateTime           @default(now()) @db.Timestamp(6)
+  updated_at         DateTime           @default(now()) @db.Timestamp(6)
+  order_package_tour order_package_tour @relation(fields: [order_package_id], references: [order_tour_package_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  user_id            Int                  @id @default(autoincrement())
+  username           String               @unique(map: "username_unique") @db.VarChar(20)
+  password           String
+  is_admin           Boolean
+  email              String               @unique @db.VarChar(200)
+  blogs              blogs[]
+  order_package_tour order_package_tour[]
+}
+
+enum paymentmethod {
+  VA
+  TRANSFER_BANK
+}
+
+enum paymentstatus {
+  SUCCESS
+  FAILED
+}
+
+enum statustour {
+  NEW
+  PAID
+  ON_TRIP
+  FINISHED
+  CANCELED
+}
