@@ -1,10 +1,12 @@
 import { Router } from "express";
-import { PrismaClient } from "../../generated/prisma/client.js";
+
+// controller
 import { addBlogController, deleteBlogController, editBlogController, getAllBlogsController, getDetailBlogController } from "../controller/blogs.controller.js";
+
+// validation request body
 import { validateData } from "../middlewares/validation-payload.js";
 import { createBlogPayloadSchema } from "../validation-schema/blog.valid-schema.js";
 
-const prisma = new PrismaClient();
 
 const router = Router()
 

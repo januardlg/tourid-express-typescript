@@ -30,12 +30,12 @@ const BlogsService = () => {
 
         const convertedResult: BlogDataDTO[] = result.map((blog) => {
             return {
-                blog_id: blog.blog_id,
+                blogId: blog.blog_id,
                 title: blog.title,
                 blog: blog.blog,
                 images: blog.images,
-                created_at: blog.created_at,
-                updated_at: blog.updated_at,
+                createdAt: blog.created_at,
+                updatedAt: blog.updated_at,
                 author: blog.users?.username
             }
         })
@@ -69,12 +69,12 @@ const BlogsService = () => {
         }
 
         const convertResul: BlogDataDTO = {
-            blog_id: result.blog_id,
+            blogId: result.blog_id,
             title: result.title,
             blog: result.blog,
             images: result.images,
-            created_at: result.created_at,
-            updated_at: result.updated_at,
+            createdAt: result.created_at,
+            updatedAt: result.updated_at,
             author: result?.users?.username
         }
         return convertResul
@@ -87,7 +87,7 @@ const BlogsService = () => {
                 title: BlogPayload.title,
                 blog: BlogPayload.blog,
                 images: BlogPayload.images,
-                author_id: BlogPayload.author_id
+                author_id: BlogPayload.authorId
             }
         })
 
@@ -106,7 +106,7 @@ const BlogsService = () => {
                 title: BlogPayload.title,
                 blog: BlogPayload.blog,
                 images: BlogPayload.images,
-                author_id: BlogPayload.author_id
+                author_id: BlogPayload.authorId
             }
         })
 
