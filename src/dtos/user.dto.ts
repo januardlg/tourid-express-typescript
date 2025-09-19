@@ -21,3 +21,12 @@ export type LoginUserPayloadDTO = z.infer<typeof loginUserValidationSchema>;
 export interface LoginUseResponseDTO {
   token: string;
 }
+
+
+// DATA IN TOKEN
+export interface UserDataInToken {
+  userId: number;
+  username: string;
+  email: string;
+  isAdmin: boolean;
+}
