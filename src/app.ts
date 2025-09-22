@@ -9,6 +9,7 @@ import indexRoutes from './routes/index.js'
 import blogRoutes from './routes/blogs.js'
 import userRoutes from './routes/user.js'
 import orderPackageRoutes from './routes/order-package.js'
+import packageTourRoutes from './routes/package-tour.js'
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/', indexRoutes)
 app.use('/blogs', blogRoutes)
 app.use('/users', userRoutes)
 app.use('/orderPackageTour', orderPackageRoutes)
+app.use('/packageTour', packageTourRoutes)
 
 // Global error handler (should be after routes)
 // app.use(errorHandler);
