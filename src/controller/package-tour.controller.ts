@@ -1,0 +1,28 @@
+import type { Request, Response, NextFunction } from "express";
+import PackageTourService from "../service/package-tour.service.js";
+import { createResponse } from "../utils/handle-response.js";
+import type { PackageTourQueryDTO } from "../dtos/package-tour.dto.js";
+
+export const getAllPackageTourController = async (
+  req: Request<{}, {}, {}, PackageTourQueryDTO>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { getAllPackageTour } = PackageTourService();
+
+
+    const resultAllPackageTour = await getAllPackageTour(req.query);
+
+    res.json(
+      createResponse(
+        200,
+        "success",
+        "succes get all package tour",
+        resultAllPackageTour
+      )
+    );
+  } catch (error) {
+    next(error);
+  }
+};
