@@ -1,9 +1,10 @@
-export function createResponse(statusCode: Number, status: string, message: string, data: any = null) {
+export function createResponse(statusCode: Number, status: string, message: string, data: any = null, meta?: any) {
   return {
     statusCode,
     status,
     message,
-    data,
+    meta,
+    data
   };
 }
 

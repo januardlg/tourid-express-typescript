@@ -20,6 +20,7 @@ const PackageTourService = () => {
         const filterBy = queryParams.filterBy ?? "name_package";
         const filterValue = queryParams.filterValue ?? "";
 
+
         const result = await prisma.package_tour_product.findMany({
             take: take,
             skip: skip,
@@ -34,7 +35,30 @@ const PackageTourService = () => {
             },
         });
 
-        return result;
+        const totalData = await prisma.package_tour_product.count({
+            orderBy: {
+                [queryParams.sortBy ?? "created_at"]: queryParams.order ?? "desc",
+            },
+            where: {
+                [filterBy]: {
+                    contains: filterValue,
+                    mode: "insensitive",
+                },
+            },
+        });
+
+        console.log({ totalData })
+
+        const resultConvert = {
+            data: result,
+            meta: {
+                page: pageNum,
+                limit: limitNum,
+                totalPages: Math.ceil(totalData / take),
+            }
+        }
+
+        return resultConvert;
     };
 
     const addPackageTour = async (pacTourPayload: AddPackageTourPayloadDTO) => {

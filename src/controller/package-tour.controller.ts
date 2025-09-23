@@ -21,7 +21,8 @@ export const getAllPackageTourController = async (
                 200,
                 "success",
                 "succes get all package tour",
-                resultAllPackageTour
+                resultAllPackageTour?.data,
+                resultAllPackageTour?.meta
             )
         );
     } catch (error) {
