@@ -12,9 +12,13 @@ import { addPackageTourPayloadSchema } from "../validation-schema/package-tour.v
 // middlweare
 import { authorizeAdmin } from "../middlewares/authorize.js";
 
+import { getAllPackageTourController } from "../controller/package-tour.controller.js";
+
 
 const router = Router()
 
+router.get("/", getAllPackageTourController)
 router.post('/', passport.authenticate("jwt", { session: false }), validateData(addPackageTourPayloadSchema), authorizeAdmin, addPackageTour)
+
 
 export default router
