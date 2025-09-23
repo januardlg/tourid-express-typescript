@@ -30,8 +30,14 @@ const OrderPackageService = () => {
     return result;
   };
 
-  const getOrderPackage = async () => {
-    const result = await prisma.order_package_tour.findMany({});
+  const getOrderPackage = async (user: UserDataInToken) => {
+    const result = await prisma.order_package_tour.findMany({
+      where: {
+        customer_id: {
+          equals: user?.userId
+        }
+      }
+    });
 
     const convertedResult: OrderPackageResponseDTO[] = result.map((order) => {
       return {

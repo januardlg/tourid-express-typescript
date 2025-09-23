@@ -44,7 +44,9 @@ export const getOrderPackageController = async (
   try {
     const { getOrderPackage } = OrderPackageService();
 
-    const orders = await getOrderPackage();
+    const user: UserDataInToken = req.user as UserDataInToken
+
+    const orders = await getOrderPackage(user);
 
     res.json(createResponse(200, "success", "succes get orders", orders));
   } catch (error) {
