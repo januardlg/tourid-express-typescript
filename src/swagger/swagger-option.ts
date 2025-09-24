@@ -47,7 +47,7 @@ const swaggerOptions: Options = {
                         title: { type: "string", description: "The title of the blog", example: 'Samosir' },
                         blog: { type: "string", description: "The content of the blog", example: 'The content of the blog...' },
                         images: { type: "string", description: "The images for the blog using base64 format", example: 'base64' },
-                        authorId: { type: "number", description: "The user id of the autor - further was added automatic from token authenticate user", example: 1 },
+                        authorId: { type: "integer", description: "The user id of the autor - further was added automatic from token authenticate user", example: 1 },
                     },
                     required: ['title', 'blog', 'images', 'authorId'],
                     example: {
@@ -64,7 +64,7 @@ const swaggerOptions: Options = {
                         title: { type: "string", description: "The title of the blog", example: 'Samosir' },
                         blog: { type: "string", description: "The content of the blog", example: 'The content of the blog...' },
                         images: { type: "string", description: "The images for the blog using base64 format", example: 'base64' },
-                        author_id: { type: "number", description: "The user id of the autor - further was added automatic from token authenticate user", example: 1 },
+                        author_id: { type: "integer", description: "The user id of the autor - further was added automatic from token authenticate user", example: 1 },
                         createdAt: { type: "string", format: 'date', description: "The date the book was added", example: '2025-09-18T08:46:59.432Z' },
                         updatedAt: { type: "string", format: 'date', description: "The date the book was updated", example: '2025-09-18T08:46:59.432Z' },
                     },
@@ -130,10 +130,10 @@ const swaggerOptions: Options = {
                 OrderPackageCreate: {
                     type: "object",
                     properties: {
-                        tourPackageId: { tourPackageId: "number", description: "Id of order" },
-                        paymentMethod: { tourPackageId: "string", description: "Payment method of order" },
-                        numberOfGuests: { tourPackageId: "number", description: "Number of guests" },
-                        totalPayment: { tourPackageId: "string", description: "Total of payment" },
+                        tourPackageId: { type: "integer", description: "Id of order" },
+                        paymentMethod: { type: "string", description: "Payment method of order" },
+                        numberOfGuests: { type: "integer", description: "Number of guests" },
+                        totalPayment: { type: "string", description: "Total of payment" },
 
                     },
                     required: ['tourPackageId', 'paymentMethod', 'numberOfGuests', 'totalPayment'],
@@ -147,13 +147,13 @@ const swaggerOptions: Options = {
                 OrderPackageResponse: {
                     type: "object",
                     properties: {
-                        orderTourPackageId: { tourPackageId: "string", description: "name of package tour" },
-                        packageTourName: { tourPackageId: "string", description: "name of package tour" },
-                        tourPackageId: { tourPackageId: "number", description: "Id of order" },
-                        status: { tourPackageId: "string", description: "status of order" },
-                        paymentMethod: { tourPackageId: "string", description: "Payment method of order" },
-                        numberOfGuests: { tourPackageId: "number", description: "Number of guests" },
-                        totalPayment: { tourPackageId: "string", description: "Total of payment" },
+                        orderTourPackageId: { type: "string", description: "name of package tour" },
+                        packageTourName: { type: "string", description: "name of package tour" },
+                        tourPackageId: { type: "integer", description: "Id of order" },
+                        status: { type: "string", description: "status of order" },
+                        paymentMethod: { type: "string", description: "Payment method of order" },
+                        numberOfGuests: { type: "integer", description: "Number of guests" },
+                        totalPayment: { type: "string", description: "Total of payment" },
                         createdAt: { type: "string", format: 'date', description: "The date the book was added", example: '2025-09-18T08:46:59.432Z' },
                         updatedAt: { type: "string", format: 'date', description: "The date the book was updated", example: '2025-09-18T08:46:59.432Z' },
                     },
@@ -167,6 +167,69 @@ const swaggerOptions: Options = {
                         totalPayment: "1000000",
                         createdAt: '2025-09-18T08:46:59.432Z',
                         updatedAt: '2025-09-18T08:46:59.432Z'
+                    }
+                },
+                PackageTourCreate: {
+                    type: "object",
+                    properties: {
+                        packageName: { type: "string", description: "Name of the package tour product" },
+                        cost: { type: "string", description: "Cost of the package tour product" },
+                        description: { type: "string", description: "description of the package tour product" },
+                        startDate: { type: "string", description: "Start date of the package tour product" },
+                        endDate: { type: "string", description: "End date of the package tour product" },
+                        hostelryPartnerId: { type: "integer", description: "Hosterly partner of the package tour product" },
+                        activities: { type: "array", description: "Activities list of the package tour product" },
+                    },
+                    required: ['packageName', 'cost', 'description', 'startDate', 'endDate', 'hostelryPartnerId', 'activities'],
+                    example: {
+                        packageName: "Medan Tour",
+                        cost: 40000,
+                        description: "Keliling Medan ....",
+                        startDate: "2025-10-03T00:00:00Z",
+                        endDate: "2025-10-05T00:00:00Z",
+                        activities: [
+                            {
+                                day: "1",
+                                title: "Traditional Market"
+                            }
+                        ],
+                        hosterlyPartnerId: 4
+                    }
+
+                },
+                PackageTourResponse: {
+                    type: "object",
+                    properties: {
+                        packageId: { type: "integer", description: "The auto-generated id of the package tour product" },
+                        namePackage: { type: "string", description: "Name of the package tour product" },
+                        cost: { type: "string", description: "Cost of the package tour product" },
+                        description: { type: "string", description: "description of the package tour product" },
+                        startDate: { type: "string", description: "Start date of the package tour product" },
+                        endDate: { type: "string", description: "End date of the package tour product" },
+                        activities: { type: "array", description: "Activities list of the package tour product" },
+                        createdAt: { type: "string", format: 'date', description: "The date the book was added", example: '2025-09-18T08:46:59.432Z' },
+                        updatedAt: { type: "string", format: 'date', description: "The date the book was updated", example: '2025-09-18T08:46:59.432Z' },
+                        hostelryPartnerId: { type: "integer", description: "Hosterly partner of the package tour product" },
+                        hostelryPartnerName: { type: "string", description: "hostelryPartnerName list of the package tour product" },
+
+                    },
+                    example: {
+                        packageId: 9,
+                        namePackage: "Bandung Tour",
+                        cost: "400000",
+                        description: "Keliling Bandung ....",
+                        startDate: "2025-10-03T00:00:00.000Z",
+                        endDate: "2025-10-05T00:00:00.000Z",
+                        activities: [
+                            {
+                                day: "1",
+                                title: "Traditional Market"
+                            }
+                        ],
+                        createdAt: "2025-09-23T03:46:46.091Z",
+                        updatedAt: "2025-09-23T03:46:46.091Z",
+                        hostelryPartnerId: 4,
+                        hostelryPartnerName: "Horas Hotel"
                     }
                 }
             },

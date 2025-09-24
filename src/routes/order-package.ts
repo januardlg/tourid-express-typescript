@@ -63,7 +63,7 @@ const router = Router();
  *                   properties:
  *                     data:
  *                       $ref: '#/components/schemas/OrderPackageResponse'
-*       400:
+ *       400:
  *         description: invalid request body
  *       401:
  *         description: invalid credentials

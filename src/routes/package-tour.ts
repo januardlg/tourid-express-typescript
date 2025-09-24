@@ -17,8 +17,115 @@ import { getAllPackageTourController } from "../controller/package-tour.controll
 
 const router = Router()
 
+/**
+ * @swagger
+ * tags: 
+ *  name: Package Tour Product
+ *  description: Package Tour Product API 
+ * /packageTour:
+ *  get:
+ *      summary: Retrieve a list of tour package product
+ *      tags: [Package-Tour]
+ *      parameters:
+ *          - in: query
+ *            name: page
+ *            schema:
+ *              type: integer
+ *              description: The page
+ *              minimum: 1
+ *              example: 1
+ *          - in: query
+ *            name: limit
+ *            schema:
+ *              type: integer
+ *              description: The limit per page
+ *              minimum: 1
+ *            examples:
+ *              2:
+ *                  value: 2
+ *              5:
+ *                  value: 5
+ *              10:
+ *                  value: 10
+ *          - in: query
+ *            name: sortBy
+ *            schema:
+ *              type: string
+ *              description: The property need to be sorted
+ *              enum: [package_id, name_package, cost, start_date, created_at]
+ *              example: package_id 
+ *          - in: query
+ *            name: order
+ *            schema:
+ *              type: string
+ *              description: The order option for sorted
+ *              enum: [asc, desc]
+ *              example: asc 
+ *          - in: query
+ *            name: filterBy
+ *            schema:
+ *              type: string
+ *              description: The property need to be filter
+ *              enum: [name_package, description]
+ *              example: name_package 
+ *          - in: query
+ *            name: filterValue
+ *            schema:
+ *              type: string
+ *              description: The value for filtering
+ *      responses:
+ *       200:
+ *         description: The list of tour package product
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/BaseResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                      type: array
+ *                      items:
+ *                       $ref: '#/components/schemas/PackageTourResponse'
+ *       500:
+ *         description: internal server error
+ *
+ *  post:
+ *      summary: Add package tour product
+ *      tags: [Package-Tour]
+ *      security:
+ *        - bearerAuth: [] 
+ *      requestBody:
+ *           required: true
+ *           content:
+ *               application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/PackageTourCreate'
+ *      responses:
+ *       200:
+ *         description: JWT Token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/BaseResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/PackageTourResponse'
+ *       400:
+ *         description: invalid request body
+ *       401:
+ *         description: invalid credentials
+ *       404:
+ *         description: not permitted
+ *       500:
+ *         description: internal server error      
+ */
+
 router.get("/", getAllPackageTourController)
 router.post('/', passport.authenticate("jwt", { session: false }), validateData(addPackageTourPayloadSchema), authorizeAdmin, addPackageTour)
 
 
 export default router
+
