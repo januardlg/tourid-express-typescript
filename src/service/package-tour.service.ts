@@ -1,6 +1,6 @@
 import { PrismaClient } from "../../generated/prisma/index.js"
 
-import type { AddPackageTourPayloadDTO, PackageTourQueryDTO } from "../dtos/package-tour.dto.js"
+import type { AddPackageTourPayloadDTO, PackageTourProductDTO, PackageTourQueryDTO } from "../dtos/package-tour.dto.js"
 
 
 const prisma = new PrismaClient()
@@ -33,7 +33,42 @@ const PackageTourService = () => {
                     mode: "insensitive",
                 },
             },
+            select: {
+                package_id: true,
+                name_package: true,
+                cost: true,
+                description: true,
+                start_date: true,
+                end_date: true,
+                activities: true,
+                hostelry_partner_id: true,
+                hostelry_partner: {
+                    select: {
+                        hostelry_name: true
+                    }
+                },
+                created_at: true,
+                updated_at: true,
+
+            }
         });
+
+
+        const dataResultConvert: PackageTourProductDTO[] = result?.map((data) => {
+            return {
+                packageId: data.package_id,
+                namePackage: data.name_package as string,
+                cost: data.cost,
+                description: data.description as string,
+                starDate: data.start_date as Date,
+                endDate: data.end_date as Date,
+                activities: data.activities,
+                hostelryPartnerId: data.hostelry_partner_id as number,
+                hostelryPartnerName: data.hostelry_partner?.hostelry_name as string,
+                createdAt: data.created_at,
+                updatedAt: data.updated_at,
+            }
+        })
 
         const totalData = await prisma.package_tour_product.count({
             orderBy: {
@@ -50,7 +85,7 @@ const PackageTourService = () => {
         console.log({ totalData })
 
         const resultConvert = {
-            data: result,
+            data: dataResultConvert,
             meta: {
                 page: pageNum,
                 limit: limitNum,

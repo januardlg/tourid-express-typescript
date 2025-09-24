@@ -10,3 +10,23 @@ export interface PackageTourQueryDTO {
     filterBy?: string;
     filterValue?: string;
 }
+
+
+interface IActivity {
+    day: string,
+    title: string
+}
+
+export interface PackageTourProductDTO {
+    packageId: number,
+    namePackage: string,
+    cost: any,
+    description: string,
+    starDate: Date,
+    endDate: Date,
+    activities: any,
+    hostelryPartnerId: number,
+    hostelryPartnerName: string;
+    createdAt: Date,
+    updatedAt: Date,
+}
