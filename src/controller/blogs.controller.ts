@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import BlogsService from "../service/blogs.service.js";
 import { createError, createResponse } from "../utils/handle-response.js";
 import type { CreateBlogPayloadDTO } from "../dtos/blog.dto.js";
+import { Prisma } from "../../generated/prisma/index.js";
 
 
 export const getAllBlogsController = async (req: Request, res: Response, next: NextFunction) => {
@@ -61,6 +62,12 @@ export const editBlogController = async (req: Request, res: Response, next: Next
         res.json(createResponse(200, 'success', 'success edit a blog', resultUpdate));
 
     } catch (error) {
+        if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === "P2025"
+        ) {
+            throw createError("User not found", 404);
+        }
         next(error)
     }
 
@@ -80,6 +87,12 @@ export const deleteBlogController = async (req: Request, res: Response, next: Ne
         res.json(createResponse(200, 'success', 'success delete a blog', resultDelete));
 
     } catch (error) {
+        if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === "P2025"
+        ) {
+            throw createError("User not found", 404);
+        }
         next(error)
     }
 
