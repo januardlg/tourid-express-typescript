@@ -46,7 +46,7 @@ const router = Router()
  *                      $ref: '#/components/schemas/BlogCreate'
  *      responses:
  *       200:
- *         description: The list of the blogs
+ *         description: The object of created blog
  *         content:
  *           application/json:
  *             schema:
@@ -75,7 +75,7 @@ const router = Router()
  *         description: The blog id
  *      responses:
  *       200:
- *         description: The list of the blogs
+ *         description: The object of blog detail
  *         content:
  *           application/json:
  *             schema:
@@ -107,7 +107,7 @@ const router = Router()
  *                      $ref: '#/components/schemas/BlogCreate'
  *      responses:
  *       200:
- *         description: The list of the blogs
+ *         description: The object of updated blog
  *         content:
  *           application/json:
  *             schema:
@@ -135,7 +135,7 @@ const router = Router()
  *         description: The blog id
  *      responses:
  *       200:
- *         description: The list of the blogs
+ *         description: The object of deleted object
  *         content:
  *           application/json:
  *             schema:
