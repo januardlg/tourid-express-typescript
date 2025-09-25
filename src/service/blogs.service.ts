@@ -91,9 +91,6 @@ const BlogsService = () => {
             }
         })
 
-        if (!result) {
-            throw createError("Failed add blog", 404);
-        }
         return result
     }
 
@@ -110,9 +107,6 @@ const BlogsService = () => {
             }
         })
 
-        if (!result) {
-            throw createError("Failed edit blog", 404);
-        }
         return result
     }
 
@@ -126,9 +120,6 @@ const BlogsService = () => {
             }
         })
 
-        if (!result) {
-            throw createError("Failed delete blog", 404);
-        }
         return result
     }
 

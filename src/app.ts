@@ -4,6 +4,10 @@ import morgan from "morgan";
 
 import { unexpectedErrorHandler } from './middlewares/unexpected-error-handler.js';
 
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerOptions from './swagger/swagger-option.js';
+
 // import routes
 import indexRoutes from './routes/index.js'
 import blogRoutes from './routes/blogs.js'
@@ -27,6 +31,12 @@ app.use('/packageTour', packageTourRoutes)
 
 // Global error handler (should be after routes)
 // app.use(errorHandler);
+
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 app.use(function (req, res, next) {
     res.status(404).json({ success: false, message: "Route not found" });
