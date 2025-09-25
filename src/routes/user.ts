@@ -67,7 +67,11 @@ const router = Router();
  *         description: invalid request body
  *       500:
  *         description: internal server error  
- *
+ * /users/refresh:
+ *  post:
+ *      summary: Refresh access token
+ *      tags: [Users]
+ *      description: Uses the HttpOnly `refreshToken` cookie automatically sent by browser. Swagger cannot attach this cookie; test via Postman or browser.
  */
 
 router.post("/register", validateData(registerUserValidationSchema), registerController);

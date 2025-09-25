@@ -20,7 +20,7 @@ const router = Router()
 /**
  * @swagger
  * tags: 
- *  name: Package Tour Product
+ *  name: Package-Tour
  *  description: Package Tour Product API 
  * /packageTour:
  *  get:
