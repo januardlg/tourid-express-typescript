@@ -8,6 +8,8 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerOptions from './swagger/swagger-option.js';
 
+import cookieParser from 'cookie-parser'
+
 // import routes
 import indexRoutes from './routes/index.js'
 import blogRoutes from './routes/blogs.js'
@@ -20,6 +22,7 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser())
 
 // Routes
 // insert to app

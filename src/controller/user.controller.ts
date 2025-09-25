@@ -4,7 +4,7 @@ import type {
   LoginUserPayloadDTO,
   RegisterUserPayloadDTO,
 } from "../dtos/user.dto.js";
-import { createResponse } from "../utils/handle-response.js";
+import { createError, createResponse } from "../utils/handle-response.js";
 
 export const registerController = async (
   req: Request,
@@ -36,6 +36,15 @@ export const LoginController = async (
 
   try {
     const loginResponse = await loginUser(payload);
+
+
+    // Assigning refresh token in http-only cookie 
+    res.cookie('jwt', loginResponse.refreshToken, {
+      httpOnly: true,
+      sameSite: 'none', secure: true,
+      maxAge: 24 * 60 * 60 * 1000
+    });
+
     res.json(
       createResponse(200, "success", "succes login user", loginResponse)
     );
@@ -43,3 +52,29 @@ export const LoginController = async (
     next(error);
   }
 };
+
+
+export const getNewAccessTokenController = async (req: Request,
+  res: Response,
+  next: NextFunction) => {
+
+  if (req.cookies?.jwt) {
+    const refreshToken: string = req.cookies.jwt;
+
+    const { getNewAccessToken } = Userservice();
+
+    try {
+      const resultNewAccessToken = await getNewAccessToken(refreshToken)
+
+      console.log({ resultNewAccessToken })
+      res.json(createResponse(200, "success", "success get new access token", resultNewAccessToken))
+
+    } catch (error) {
+      next(error)
+    }
+
+  } else {
+    throw createError('Unauthorized', 406)
+  }
+
+}

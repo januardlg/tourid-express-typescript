@@ -11,12 +11,51 @@ import type {
   LoginUserPayloadDTO,
   RegisterUserPayloadDTO,
   RegisterUserResponseDTO,
+  UserDataInToken,
 } from "../dtos/user.dto.js";
 import { createError } from "../utils/handle-response.js";
 
 const prisma = new PrismaClient();
 
 const Userservice = () => {
+
+
+
+  const generateAccessToken = (user: Partial<UserDataInToken>) => {
+
+    const accessToken = jwt.sign(
+      {
+        userId: user?.userId,
+        username: user?.username,
+        email: user?.email,
+      },
+      process.env.secretKey as string,
+      {
+        expiresIn: 3600,
+      }
+    );
+
+    return accessToken
+
+  }
+
+
+  const generatedRefreshToken = (user: Partial<UserDataInToken>) => {
+    const refreshToken = jwt.sign(
+      {
+        userId: user?.userId,
+        username: user?.username,
+        email: user?.email,
+      },
+      process.env.secretKeyRefreshToken as string,
+      {
+        expiresIn: '1d'
+      }
+    );
+
+    return refreshToken
+  }
+
   const registerUser = async (payload: RegisterUserPayloadDTO) => {
     const hashedPassword = await bycript.hash(payload.password, 10);
 
@@ -63,30 +102,49 @@ const Userservice = () => {
       throw createError("Invalid credentials", 401);
     }
 
-    let token = jwt.sign(
-      {
-        userId: existingUser.user_id,
-        username: existingUser.username,
-        email: existingUser.email,
-      },
-      process.env.secretKey as string,
-      {
-        expiresIn: 3600,
-      }
-    );
+    const convertExistingUser: Partial<UserDataInToken> = {
+      userId: existingUser?.user_id,
+      email: existingUser?.email,
+      username: existingUser?.username
+    }
 
-    // console.log("existingUser", existingUser);
+
+    const accessToken = generateAccessToken(convertExistingUser)
+
+    const refreshToken = generatedRefreshToken(convertExistingUser)
 
     const convertedResult: LoginUseResponseDTO = {
-      token: token,
+      accessToken: accessToken,
+      refreshToken: refreshToken
     };
 
     return convertedResult;
   };
 
+
+  const getNewAccessToken = async (refreshToken: string) => {
+
+    let newToken
+    jwt.verify(refreshToken, process.env.secretKeyRefreshToken as string, // Verifying refresh token
+      async (err, decoded: any) => {
+        if (err) {
+
+          throw createError('Unauthorized', 406)
+        }
+        else {
+          newToken = generateAccessToken(decoded)
+        }
+      })
+
+
+    return { accessToken: newToken }
+
+  }
+
   return {
     registerUser,
     loginUser,
+    getNewAccessToken
   };
 };
 

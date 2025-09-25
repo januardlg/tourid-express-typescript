@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { LoginController, registerController } from "../controller/user.controller.js";
+import { getNewAccessTokenController, LoginController, registerController } from "../controller/user.controller.js";
 import { validateData } from "../middlewares/validation-payload.js";
 import { loginUserValidationSchema, registerUserValidationSchema } from "../validation-schema/user.valid-schema.js";
 
@@ -72,5 +72,6 @@ const router = Router();
 
 router.post("/register", validateData(registerUserValidationSchema), registerController);
 router.post("/login", validateData(loginUserValidationSchema), LoginController)
+router.post("/refresh", getNewAccessTokenController)
 
 export default router;
