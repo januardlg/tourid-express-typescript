@@ -1,4 +1,4 @@
-export function createResponse(statusCode: Number, status: string, message: string, data: any = null, meta?: any) {
+export function createResponse(statusCode: number, status: string, message: string, data: any = null, meta?: any) {
   return {
     statusCode,
     status,

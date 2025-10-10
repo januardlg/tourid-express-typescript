@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import BlogsService from "../service/blogs.service.js";
+// import BlogsService from "../service/blogs.service.js";
+import { BlogsService } from "../service/blogs.service.js";
 import { createError, createResponse } from "../utils/handle-response.js";
 import type { CreateBlogPayloadDTO } from "../dtos/blog.dto.js";
 import { Prisma } from "../../generated/prisma/index.js";
@@ -7,11 +8,11 @@ import { Prisma } from "../../generated/prisma/index.js";
 
 export const getAllBlogsController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { getAllBlogs } = BlogsService()
+    const getAllBlogs = BlogsService.getAllBlogs
 
     try {
         const blogs = await getAllBlogs()
-        res.json(createResponse(200, "success", "succes get blogs", blogs))
+        res.status(200).json(createResponse(200, "success", "succes get blogs", blogs))
 
     } catch (error) {
         next(error)
@@ -21,13 +22,13 @@ export const getAllBlogsController = async (req: Request, res: Response, next: N
 export const getDetailBlogController = async (req: Request, res: Response, next: NextFunction) => {
     const { blogId } = req.params
 
-    const { getDetailBlog } = BlogsService()
+    const getDetailBlog = BlogsService.getDetailBlog
 
     const id = parseInt(blogId ?? "", 10)
 
     try {
         const detailBlog = await getDetailBlog(id)
-        res.json(createResponse(200, "success", "succes get blog detail", detailBlog))
+        res.status(200).json(createResponse(200, "success", "succes get blog detail", detailBlog))
 
     } catch (error) {
         next(error)
@@ -36,12 +37,12 @@ export const getDetailBlogController = async (req: Request, res: Response, next:
 
 export const addBlogController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { addBlog } = BlogsService()
+    const addBlog = BlogsService.addBlog
 
     try {
         const payload: CreateBlogPayloadDTO = req.body
         const resultCreate = await addBlog(payload)
-        res.json(createResponse(200, 'success', 'success add a blog', resultCreate));
+        res.status(200).json(createResponse(200, 'success', 'success add a blog', resultCreate));
     } catch (error) {
         next(error)
     }
@@ -51,7 +52,7 @@ export const addBlogController = async (req: Request, res: Response, next: NextF
 
 export const editBlogController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { editBlog } = BlogsService()
+    const editBlog = BlogsService.editBlog
 
     try {
         const payload: CreateBlogPayloadDTO = req.body
@@ -59,7 +60,7 @@ export const editBlogController = async (req: Request, res: Response, next: Next
 
 
         const resultUpdate = await editBlog(payload, blogId)
-        res.json(createResponse(200, 'success', 'success edit a blog', resultUpdate));
+        res.status(200).json(createResponse(200, 'success', 'success edit a blog', resultUpdate));
 
     } catch (error) {
         if (
@@ -76,7 +77,7 @@ export const editBlogController = async (req: Request, res: Response, next: Next
 
 export const deleteBlogController = async (req: Request, res: Response, next: NextFunction) => {
 
-    const { deleteBlog } = BlogsService()
+    const deleteBlog = BlogsService.deleteBlog
 
     const { blogId } = req.params
 
@@ -84,7 +85,7 @@ export const deleteBlogController = async (req: Request, res: Response, next: Ne
 
     try {
         const resultDelete = await deleteBlog(id)
-        res.json(createResponse(200, 'success', 'success delete a blog', resultDelete));
+        res.status(200).json(createResponse(200, 'success', 'success delete a blog', resultDelete));
 
     } catch (error) {
         if (

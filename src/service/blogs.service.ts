@@ -4,9 +4,9 @@ import { createError } from "../utils/handle-response.js";
 
 const prisma = new PrismaClient();
 
-const BlogsService = () => {
+export const BlogsService = {
 
-    const getAllBlogs = async () => {
+    async getAllBlogs() {
         const result = await prisma.blogs.findMany({
             where: {
                 users: {
@@ -41,9 +41,9 @@ const BlogsService = () => {
         })
 
         return convertedResult
-    }
+    },
 
-    const getDetailBlog = async (blogId: number) => {
+    async getDetailBlog(blogId: number) {
 
         const result = await prisma.blogs.findUnique({
             where: {
@@ -78,10 +78,9 @@ const BlogsService = () => {
             author: result?.users?.username
         }
         return convertResul
-    }
+    },
 
-
-    const addBlog = async (BlogPayload: CreateBlogPayloadDTO) => {
+    async addBlog(BlogPayload: CreateBlogPayloadDTO) {
         const result = await prisma.blogs.create({
             data: {
                 title: BlogPayload.title,
@@ -91,11 +90,22 @@ const BlogsService = () => {
             }
         })
 
-        return result
-    }
+        if (!result) {
+            throw createError("No data found", 404);
+        }
 
+        const convertResult: Partial<BlogDataDTO> = {
+            blogId: result.blog_id,
+            title: result.title,
+            blog: result.blog,
+            images: result.images,
+            createdAt: result.created_at,
+            updatedAt: result.updated_at,
+        }
+        return convertResult
+    },
 
-    const editBlog = async (BlogPayload: CreateBlogPayloadDTO, blogId: number) => {
+    async editBlog(BlogPayload: CreateBlogPayloadDTO, blogId: number) {
 
         const result = await prisma.blogs.update({
             where: { blog_id: blogId },
@@ -107,23 +117,32 @@ const BlogsService = () => {
             }
         })
 
-        return result
-    }
+        const convertResult: Partial<BlogDataDTO> = {
+            blogId: result.blog_id,
+            title: result.title,
+            blog: result.blog,
+            images: result.images,
+            createdAt: result.created_at,
+            updatedAt: result.updated_at,
+        }
+        return convertResult
+    },
 
-
-
-    const deleteBlog = async (blogId: number) => {
+    async deleteBlog(blogId: number) {
 
         const result = await prisma.blogs.delete({
             where: {
                 blog_id: blogId
+            },
+            select: {
+                blog_id: true
             }
         })
 
-        return result
+        const convertResult: Partial<BlogDataDTO> = {
+            blogId: result.blog_id,
+        }
+        return convertResult
     }
 
-    return { getAllBlogs, getDetailBlog, addBlog, editBlog, deleteBlog }
 }
-
-export default BlogsService
