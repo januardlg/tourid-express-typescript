@@ -4,8 +4,8 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "nodemon --watch src --ext ts --exec node --loader ts-node/esm src/server.ts",
-    "lint": "eslint 'src/**/*.ts'",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
+    "test": "dotenv -e .env.test -- jest --runInBand --detectOpenHandles",
+    "lint": "eslint 'src/**/*.ts'"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -20,6 +20,7 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "dotenv": "^17.2.2",
+    "dotenv-cli": "^10.0.0",
     "eslint": "^9.35.0",
     "express": "^5.1.0",
     "install": "^0.13.0",
@@ -42,7 +43,7 @@
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
     "morgan": "^1.10.1",
-    "swagger-jsdoc": "^6.2.8",
+    "swagger-jsdoc": "^3.7.0",
     "swagger-ui-express": "^5.0.1",
     "ts-node-dev": "^2.0.0",
     "zod": "^4.1.9"

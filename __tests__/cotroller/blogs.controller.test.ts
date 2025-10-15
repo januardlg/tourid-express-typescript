@@ -49,7 +49,7 @@ describe('test for getAllBlogsController', () => {
         );
 
         // define expected reponse json of the API using real function
-        const expectedResponseJson = createResponse(200, "success", "succes get blogs", mockDataFromService)
+        const expectedResponseJson = createResponse(200, "success", "success get blogs", mockDataFromService)
 
         // call main function
         await getAllBlogsController(req, res, next);
@@ -93,7 +93,7 @@ describe('test for getDetailBlogController', () => {
         );
 
         // define expected reponse json of the API using real function
-        const expectedResponseJson = createResponse(200, "success", "succes get blog detail", mockDataFromService)
+        const expectedResponseJson = createResponse(200, "success", "success get blog detail", mockDataFromService)
 
         // call main function
         await getDetailBlogController(req, res, next);
@@ -242,7 +242,7 @@ describe('test for editBlogController', () => {
 });
 
 
-describe('test for deleteDetailBlogController', () => {
+describe('test for deleteBlogController', () => {
     afterEach(() => {
         jest.restoreAllMocks();
     });

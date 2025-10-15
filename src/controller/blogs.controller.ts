@@ -12,7 +12,7 @@ export const getAllBlogsController = async (req: Request, res: Response, next: N
 
     try {
         const blogs = await getAllBlogs()
-        res.status(200).json(createResponse(200, "success", "succes get blogs", blogs))
+        res.status(200).json(createResponse(200, "success", "success get blogs", blogs))
 
     } catch (error) {
         next(error)
@@ -28,7 +28,7 @@ export const getDetailBlogController = async (req: Request, res: Response, next:
 
     try {
         const detailBlog = await getDetailBlog(id)
-        res.status(200).json(createResponse(200, "success", "succes get blog detail", detailBlog))
+        res.status(200).json(createResponse(200, "success", "success get blog detail", detailBlog))
 
     } catch (error) {
         next(error)
