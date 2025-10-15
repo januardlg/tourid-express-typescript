@@ -48,7 +48,7 @@ export const getOrderPackageController = async (
 
     const orders = await getOrderPackage(user);
 
-    res.json(createResponse(200, "success", "succes get orders", orders));
+    res.json(createResponse(200, "success", "success get orders", orders));
   } catch (error) {
     next(error);
   }
