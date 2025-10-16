@@ -19,6 +19,15 @@ export default {
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1'   // 👈 penting: biar Jest gak nyari .js waktu di-import TS
   },
+  // collectCoverage: true,
+  // coverageThreshold: {
+  //   global: {
+  //     statements: 80,
+  //     branches: 75,
+  //     functions: 80,
+  //     lines: 80,
+  //   },
+  // },
   globals: {
     'ts-jest': {
       useESM: true
