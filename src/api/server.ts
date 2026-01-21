@@ -6,8 +6,8 @@ import app from "../app.js";
 
 dotenv.config();
 
-export default serverless(app);
+// export default serverless(app);
 
-// app.listen(process.env.PORT, () => {
-//     console.log(`🚀 Server running at http://localhost:${process.env.PORT}`);
-// });
+app.listen(process.env.PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${process.env.PORT}`);
+});
