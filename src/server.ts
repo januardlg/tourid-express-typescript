@@ -1,9 +1,11 @@
-// /api/index.ts
-import serverless from "serverless-http";
-// import app from "../app"; // your express app
-import dotenv from "dotenv";
-import app from "./app.js";
+// import dotenv from "dotenv";
+// import app from "./app.js";
 
-dotenv.config();
+// dotenv.config();
 
-export default serverless(app);
+// const PORT = process.env.PORT || 3000;
+
+// app.listen(PORT, () => {
+//     console.log(`🚀 Server running at http://localhost:${PORT}`);
+// });
+

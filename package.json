@@ -2,8 +2,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "nodemon --watch src --ext ts --exec node --loader ts-node/esm src/server.ts",
+    "start": "node dist/api/server.js",
+    "dev": "nodemon --watch src --ext ts --exec node --loader ts-node/esm src/api/server.ts",
     "lint": "eslint 'src/**/*.ts'"
   },
   "devDependencies": {
