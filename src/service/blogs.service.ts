@@ -1,8 +1,7 @@
-import { PrismaClient } from "../../generated/prisma/index.js"
 import { type BlogDataDTO, type CreateBlogPayloadDTO } from "../dtos/blog.dto.js";
 import { createError } from "../utils/handle-response.js";
+import { prisma } from "../lib/prisma.js";
 
-const prisma = new PrismaClient();
 
 const BlogsService = () => {
 

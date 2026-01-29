@@ -1,10 +1,8 @@
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import passport from "passport";
 
-import { PrismaClient } from "../../generated/prisma/index.js";
 import type { UserDataInToken } from "../dtos/user.dto.js";
-
-const prisma = new PrismaClient();
+import { prisma } from "../lib/prisma.js";
 
 passport.use(
   new JwtStrategy(

@@ -1,4 +1,4 @@
-import { PrismaClient } from "../../generated/prisma/index.js";
+import { prisma } from "../lib/prisma.js";
 
 // encrypt password
 import bycript from "bcrypt";
@@ -15,7 +15,7 @@ import type {
 } from "../dtos/user.dto.js";
 import { createError } from "../utils/handle-response.js";
 
-const prisma = new PrismaClient();
+
 
 const Userservice = () => {
 

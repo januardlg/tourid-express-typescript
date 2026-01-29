@@ -1,12 +1,9 @@
-import { PrismaClient } from "../../generated/prisma/index.js"
-
+import { prisma } from "../lib/prisma.js";
 import type { AddPackageTourPayloadDTO, PackageTourProductDTO, PackageTourQueryDTO } from "../dtos/package-tour.dto.js"
 
 
-const prisma = new PrismaClient()
 
 const PackageTourService = () => {
-    const prisma = new PrismaClient();
 
     const getAllPackageTour = async (queryParams: PackageTourQueryDTO) => {
         const { page, limit } = queryParams;

@@ -1,5 +1,5 @@
 // prisma
-import { PrismaClient } from "../../generated/prisma/index.js";
+import { prisma } from "../lib/prisma.js";
 
 // DTO
 import type {
@@ -7,9 +7,6 @@ import type {
   OrderPackageResponseDTO,
 } from "../dtos/order-package.dto.js";
 import type { UserDataInToken } from "../dtos/user.dto.js";
-
-
-const prisma = new PrismaClient();
 
 const OrderPackageService = () => {
   const addOrderPackage = async (
