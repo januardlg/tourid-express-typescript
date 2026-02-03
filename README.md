@@ -114,10 +114,13 @@ The goal is to ensure:
 
 #### LoginResponse
 - accessToken: string
-- refreshToken: string
 ##### Notes
 - `accessToken` is using for access authorized API
-- `refreshToken` is using for get new access token if access token expired
+
+---
+### Core Contract: Refresh Token
+#### RefreshTokenResponse
+- accessToken: string
 
 ---
 ### Core Contract: Get Package Tour Data

@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 
 // type
 import type {
-  LoginUseResponseDTO,
+  LoginUseResponse,
   LoginUserPayloadDTO,
   RegisterUserPayloadDTO,
   RegisterUserResponseDTO,
@@ -113,7 +113,7 @@ const Userservice = () => {
 
     const refreshToken = generatedRefreshToken(convertExistingUser)
 
-    const convertedResult: LoginUseResponseDTO = {
+    const convertedResult: LoginUseResponse = {
       accessToken: accessToken,
       refreshToken: refreshToken
     };

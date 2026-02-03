@@ -65,6 +65,8 @@ const router = Router();
  *                       $ref: '#/components/schemas/RegisterUserResponse'
  *       400:
  *         description: invalid request body
+ *       409:
+ *         description: duplicate for unique data
  *       500:
  *         description: internal server error  
  * /users/refresh:

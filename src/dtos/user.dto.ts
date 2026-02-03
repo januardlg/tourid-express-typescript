@@ -18,7 +18,7 @@ export interface RegisterUserResponseDTO {
 // LOGIN
 export type LoginUserPayloadDTO = z.infer<typeof loginUserValidationSchema>;
 
-export interface LoginUseResponseDTO {
+export interface LoginUseResponse {
   accessToken: string;
   refreshToken: string;
 }

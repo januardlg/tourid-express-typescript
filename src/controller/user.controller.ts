@@ -5,6 +5,7 @@ import type {
   RegisterUserPayloadDTO,
 } from "../dtos/user.dto.js";
 import { createError, createResponse } from "../utils/handle-response.js";
+import { Prisma } from "../../generated/prisma/index.js";
 
 export const registerController = async (
   req: Request,
@@ -19,10 +20,17 @@ export const registerController = async (
     const responseRegister = await registerUser(payload);
 
     res.json(
-      createResponse(200, "success", "succes register user", responseRegister)
+      createResponse(200, "success", "success register user", responseRegister)
     );
-  } catch (error) {
-    next(error);
+  } catch (error: any) {
+    const targetKey = error?.meta?.target[0]
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      throw createError(`${targetKey} already exist`, 409);
+    }
+    next(error)
   }
 };
 
@@ -46,7 +54,7 @@ export const LoginController = async (
     });
 
     res.json(
-      createResponse(200, "success", "succes login user", loginResponse)
+      createResponse(200, "success", "success login user", { accessToken: loginResponse.accessToken })
     );
   } catch (error) {
     next(error);

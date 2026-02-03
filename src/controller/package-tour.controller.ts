@@ -20,7 +20,7 @@ export const getAllPackageTourController = async (
             createResponse(
                 200,
                 "success",
-                "succes get all package tour",
+                "success get all package tour",
                 resultAllPackageTour?.data,
                 resultAllPackageTour?.meta
             )
