@@ -65,3 +65,141 @@ if (process.env.NODE_ENV !== "production") {
 
 
 ```
+
+## Data Contract
+
+This project uses shared TypeScript interfaces as data contracts between the frontend and Express backend.
+The goal is to ensure:
+- Type safety across layers
+- Clear API boundaries
+- Easier refactoring when contracts evolve
+
+---
+#### Common
+##### BaseResponse
+- statusCode: number
+- status: string
+- message: string
+##### Notes
+- All response will extend this `BaseResponse` and data will be wrapped using key `data`
+
+### MetaResponse
+- page: number
+- limit: number
+- totalPage: number
+
+### Core Contract: Register
+#### RegisterRequest
+- username: string (required, 5-20 characters)
+- email: string (required, email format)
+- password: string (required, min 8 characters and at least 1 uppercase and at least 1 number)
+
+##### Notes
+- validation is for both frontend and backend
+
+#### RegisterResponse
+- username: string
+- email: string
+- isAdmin: boolean (default: false)
+
+##### Notes
+- `password` is never returned in any response.
+- `isAdmin` is assigned by the system and can not be set by request.
+
+---
+### Core Contract: Login
+#### LoginRequest
+- email: string (required)
+- password: string (required, min 8 characters and at least 1 uppercase and at least 1 number)
+
+#### LoginResponse
+- accessToken: string
+- refreshToken: string
+##### Notes
+- `accessToken` is using for access authorized API
+- `refreshToken` is using for get new access token if access token expired
+
+---
+### Core Contract: Get Package Tour Data
+#### PackageTourListQuery
+- page : number (integer, min 1)
+- limit : number (integer, min 1)
+- sortBy : string
+- order : string
+- filterBy: string
+- filterValue: string
+##### Notes
+-  all query parameters default value defined on backend
+- Query parameters are received as strings and parsed to integers when needed (`page`, `limit`).
+
+#### PackageTourListResponse
+- packageId: number
+- packageName: string
+- cost: string(decimal)
+- description: string
+- startDate: string ISO 8601
+- endDate: string ISO 8601
+- activities:Activity[]
+- hostelryPartnerName: string
+- createdAt: string ISO 8601
+- updatedAt: string ISO 8601
+#### Activity
+- day: number
+- destinations: string[]
+##### Notes
+- PackageTourResponse is wrap in `data` and extends the `MetaResponse` and `BaseResponse`
+- `cost` is represented as string to avoid floating precision issue
+
+---
+### Core Contract: Add Package Tour Data
+#### PackageTourRequest
+- packageName: string  (required, 10-60 characters)
+- cost: string(decimal) (required)
+- description: string (required, text, min 20 characters)
+- startDate: string ISO 8601 (required)
+- endDate: string ISO 8601 (required)
+- activities:Activity[] (required)
+- hostelryPartnerId: number (required, refer to hosterly partner data)
+### Authentication
+- This requires a valid user token to be provided via request `headers`.
+
+#### PackageTourResponse
+- packageId: number 
+- packageName: string
+- createdAt: string ISO 8601
+- updatedAt: string ISO 8601
+
+---
+### Core Contract: Get Package Tour Detail Data
+#### PackageTourDetailResponse
+- packageId: number
+- packageName: string
+- cost: string(decimal)
+- description: string
+- startDate: string ISO 8601
+- endDate: string ISO 8601
+- activities:Activity[]
+- hostelryPartnerName: string
+- hosterlyPartnerLocation: string
+- createdAt: string ISO 8601
+- updatedAt: string ISO 8601
+
+---
+### Core Contract: Create Order Package Tour
+#### OrderPackageTourRequest
+- tourPackageId: number (required, refer to Package Tour )
+- paymentMethod: string (required, dummy)
+- numberOfGuests: number (requried)
+- totalPayment: string (decimal) (requried)
+
+#### OrderPackageTourResponse
+- orderTourPackageId: number
+- tourPackageId: number
+- packageTourName: string
+- status : string
+- paymentMethod: string
+- numberOfGuests: string
+- totalPayment: string (decimal) (requried)
+- createdAt: string ISO 8601
+- updatedAt: string ISO 8601
+
