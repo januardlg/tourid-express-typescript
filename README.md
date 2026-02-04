@@ -127,9 +127,9 @@ The goal is to ensure:
 #### PackageTourListQuery
 - page : number (integer, min 1)
 - limit : number (integer, min 1)
-- sortBy : string
-- order : string
-- filterBy: string
+- sortBy : string (refer to field)
+- order : "asc"|"desc"
+- filterBy: string (refer to field)
 - filterValue: string
 ##### Notes
 -  all query parameters default value defined on backend

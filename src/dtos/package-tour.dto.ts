@@ -6,7 +6,7 @@ export interface PackageTourQueryDTO {
     page?: string;
     limit?: string;
     sortBy?: string;
-    order?: string;
+    order?: "asc" | "desc";
     filterBy?: string;
     filterValue?: string;
 }
@@ -26,7 +26,18 @@ export interface PackageTourProductDTO {
     endDate: Date,
     activities: any,
     hostelryPartnerId: number,
-    hostelryPartnerName: string;
+    hostelryPartnerName?: string;
+    hostelryPartnerLocation?: string;
     createdAt: Date,
     updatedAt: Date,
+}
+
+export interface MetaDataPackageTourDTO {
+    page: number;
+    limit: number;
+    totalPages: number;
+    sortBy: string;
+    order: "asc" | "desc";
+    filterBy: string;
+    filterValue: string;
 }

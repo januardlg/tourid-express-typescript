@@ -31,3 +31,7 @@ export interface UserDataInToken {
   email: string;
   isAdmin: boolean;
 }
+
+export interface LoginResponseDTO {
+  accessToken: string;
+}

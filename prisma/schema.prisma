@@ -24,6 +24,7 @@ model hostelry_partner {
   hostelry_name        String?                @db.VarChar(100)
   hostelry_address     String?                @db.VarChar(250)
   hostelry_level       Int?
+  hostelry_location    String
   package_tour_product package_tour_product[]
 }
 

@@ -1,8 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import Userservice from "../service/user.service.js";
 import type {
+  LoginResponseDTO,
   LoginUserPayloadDTO,
   RegisterUserPayloadDTO,
+  RegisterUserResponseDTO,
 } from "../dtos/user.dto.js";
 import { createError, createResponse } from "../utils/handle-response.js";
 import { Prisma } from "../../generated/prisma/index.js";
@@ -20,7 +22,7 @@ export const registerController = async (
     const responseRegister = await registerUser(payload);
 
     res.json(
-      createResponse(200, "success", "success register user", responseRegister)
+      createResponse<RegisterUserResponseDTO>(200, "success", "success register user", responseRegister)
     );
   } catch (error: any) {
     const targetKey = error?.meta?.target[0]
@@ -54,7 +56,7 @@ export const LoginController = async (
     });
 
     res.json(
-      createResponse(200, "success", "success login user", { accessToken: loginResponse.accessToken })
+      createResponse<LoginResponseDTO>(200, "success", "success login user", { accessToken: loginResponse.accessToken })
     );
   } catch (error) {
     next(error);
