@@ -206,3 +206,8 @@ The goal is to ensure:
 - createdAt: string ISO 8601
 - updatedAt: string ISO 8601
 
+
+### Dummy Payment Workflow
+https://www.notion.so/Dummy-Order-and-Payment-Workflow-2fefd64c77eb801fac52f2075cc4632d?showMoveTo=true&saveParent=true
+
+
