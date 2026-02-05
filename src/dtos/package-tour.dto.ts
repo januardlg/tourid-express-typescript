@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import type { addPackageTourPayloadSchema } from "../validation-schema/package-tour.valid-schema.js";
+import type { activitySchema, addPackageTourPayloadSchema } from "../validation-schema/package-tour.valid-schema.js";
 
 export type AddPackageTourPayloadDTO = z.infer<typeof addPackageTourPayloadSchema>
 export interface PackageTourQueryDTO {
@@ -11,20 +11,16 @@ export interface PackageTourQueryDTO {
     filterValue?: string;
 }
 
-
-interface IActivity {
-    day: string,
-    title: string
-}
+export type IActivity = z.infer<typeof activitySchema>
 
 export interface PackageTourProductDTO {
     packageId: number,
     namePackage: string,
-    cost: any,
+    cost: string,
     description: string,
     starDate: Date,
     endDate: Date,
-    activities: any,
+    activities: IActivity[],
     hostelryPartnerId: number,
     hostelryPartnerName?: string;
     hostelryPartnerLocation?: string;

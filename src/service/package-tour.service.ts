@@ -1,5 +1,5 @@
 import { prisma } from "../lib/prisma.js";
-import type { AddPackageTourPayloadDTO, MetaDataPackageTourDTO, PackageTourProductDTO, PackageTourQueryDTO } from "../dtos/package-tour.dto.js"
+import type { AddPackageTourPayloadDTO, IActivity, MetaDataPackageTourDTO, PackageTourProductDTO, PackageTourQueryDTO } from "../dtos/package-tour.dto.js"
 import { createError } from "../utils/handle-response.js";
 
 
@@ -59,11 +59,11 @@ const PackageTourService = () => {
             return {
                 packageId: data.package_id,
                 namePackage: data.name_package as string,
-                cost: data.cost,
+                cost: data.cost?.toString() as string,
                 description: data.description as string,
                 starDate: data.start_date as Date,
                 endDate: data.end_date as Date,
-                activities: data.activities,
+                activities: data.activities as IActivity[],
                 hostelryPartnerId: data.hostelry_partner_id as number,
                 hostelryPartnerName: data.hostelry_partner?.hostelry_name as string,
                 createdAt: data.created_at,
@@ -135,11 +135,11 @@ const PackageTourService = () => {
         const dataResultConvert: PackageTourProductDTO = {
             packageId: result.package_id,
             namePackage: result.name_package as string,
-            cost: result.cost,
+            cost: result.cost?.toString() as string,
             description: result.description as string,
             starDate: result.start_date as Date,
             endDate: result.end_date as Date,
-            activities: result.activities,
+            activities: result.activities as IActivity[],
             hostelryPartnerId: result.hostelry_partner_id as number,
             hostelryPartnerName: result?.hostelry_partner?.hostelry_name as string,
             hostelryPartnerLocation: result?.hostelry_partner?.hostelry_location as string,
@@ -156,7 +156,7 @@ const PackageTourService = () => {
         const result = await prisma.package_tour_product.create({
             data: {
                 name_package: pacTourPayload.packageName,
-                cost: pacTourPayload.cost,
+                cost: parseInt(pacTourPayload.cost, 10),
                 description: pacTourPayload.description,
                 start_date: pacTourPayload.startDate,
                 end_date: pacTourPayload.endDate,
@@ -168,11 +168,11 @@ const PackageTourService = () => {
         const dataResultConvert: PackageTourProductDTO = {
             packageId: result.package_id,
             namePackage: result.name_package as string,
-            cost: result.cost,
+            cost: result.cost?.toString() as string,
             description: result.description as string,
             starDate: result.start_date as Date,
             endDate: result.end_date as Date,
-            activities: result.activities,
+            activities: result.activities as IActivity[],
             hostelryPartnerId: result.hostelry_partner_id as number,
             createdAt: result.created_at,
             updatedAt: result.updated_at,
