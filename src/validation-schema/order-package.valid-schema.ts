@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const addOrderPackagePayloadSchema = z.object({
   tourPackageId: z.number(),
-  paymentMethod: z.enum(["TRANSFER_BANK","VA"]),
+  paymentMethodId: z.number(),
   numberOfGuests: z.number(),
-  totalPayment: z.number(),
+  totalPayment: z.string().regex(/^\d+(\.\d{1,2})?$/, "must be a valid monetary amount"),
 });

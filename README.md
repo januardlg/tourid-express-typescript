@@ -191,18 +191,32 @@ The goal is to ensure:
 ### Core Contract: Create Order Package Tour
 #### OrderPackageTourRequest
 - tourPackageId: number (required, refer to Package Tour )
-- paymentMethod: string (required, dummy)
+- paymentMethodId: numnber (required, refer to payment method)
 - numberOfGuests: number (requried)
 - totalPayment: string (decimal) (requried)
 
-#### OrderPackageTourResponse
+#### CreateOrderPackageTourResponse
 - orderTourPackageId: number
 - tourPackageId: number
+- paymentMethodId: number
+- paymentStatus : string
+- totalPayment: string (decimal)
+- referenceNumber: string
+- expiredAt: string ISO 8601
+
+### Core Contract: Get Order Package Tour
+#### OrderPackageTourResponse
+- orderTourPackageId: number
 - packageTourName: string
-- status : string
-- paymentMethod: string
+- paymentStatus : string
+- paymentMethodName: string
+- paymentDestinationAccount: string
 - numberOfGuests: string
 - totalPayment: string (decimal) (requried)
+- referenceNumber: string
 - createdAt: string ISO 8601
-- updatedAt: string ISO 8601
+- expiredAt: string ISO 8601
+
+
+
 
