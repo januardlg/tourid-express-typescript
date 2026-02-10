@@ -13,5 +13,6 @@ export const addPackageTourPayloadSchema = z.object({
     startDate: z.string(),
     endDate: z.string(),
     activities: z.array(activitySchema),
-    hosterlyPartnerId: z.number()
+    hosterlyPartnerId: z.number(),
+    quota: z.number()
 })

@@ -17,38 +17,126 @@ const OrderPackageService = () => {
     user: UserDataInToken
   ) => {
 
-    const EXPIRED_PAYMENT_MINUTES = 10
-    const now = new Date();
-    const expiredPaymentTime = now.getTime() + (EXPIRED_PAYMENT_MINUTES * 60 * 1000)
+    return prisma.$transaction(async (tx) => {
 
-    const UIDReferenceNumber = uuidv4()
+      const EXPIRED_PAYMENT_MINUTES = 10
+      const now = new Date();
+      const expiredPaymentTime = now.getTime() + (EXPIRED_PAYMENT_MINUTES * 60 * 1000)
 
-    const referenceNumberGenerate = `TRF-${UIDReferenceNumber}`
+      const UIDReferenceNumber = uuidv4()
 
-    const result = await prisma.order_package_tour.create({
-      data: {
-        tour_package_id: payload.tourPackageId,
-        payment_status: "PENDING",
-        payment_method: payload.paymentMethodId,
-        number_of_guests: payload.numberOfGuests,
-        total_payment: payload.totalPayment,
-        customer_id: user?.userId,
-        expired_at: new Date(expiredPaymentTime),
-        reference_number: referenceNumberGenerate
+      const referenceNumberGenerate = `TRF-${UIDReferenceNumber}`
+
+      //Hold this row from being modified by other transactions until this transaction finishes.
+      await tx.$executeRaw`
+        SELECT package_id
+        FROM package_tour_product
+        WHERE package_id = ${payload.tourPackageId}
+        FOR UPDATE
+      `
+
+      // get tour product
+      const product = await tx.package_tour_product.findUnique({
+        where: { package_id: payload.tourPackageId }
+      })
+
+      if (!product) {
+        throw new Error("Product not found")
       }
-    });
 
-    const dataResultConvert: CreateOrderPackageTourResponseDTO = {
-      orderTourPackageId: result.order_tour_package_id,
-      tourPackageId: result.tour_package_id,
-      paymentMethodId: result.payment_method,
-      paymentStatus: result.payment_status,
-      totalPayment: result.total_payment?.toString(),
-      referenceNumber: result.reference_number,
-      expiredAt: result.expired_at
-    }
+      // count availabilty quota
+      const ordered_package_tour = await tx.order_package_tour.aggregate({
+        where: {
+          tour_package_id: payload.tourPackageId,
+          payment_status: 'PAID'
+        },
+        _sum: {
+          number_of_guests: true
+        }
+      })
 
-    return dataResultConvert;
+      const bookedGuests = ordered_package_tour._sum.number_of_guests ?? 0
+
+      if (product.quota - bookedGuests < payload.numberOfGuests) {
+        throw new Error("Tour quota is not available")
+      }
+
+      const totalBill = (product?.cost as unknown as number * payload.numberOfGuests)
+
+      if (totalBill !== parseInt(payload.totalPayment, 10)) {
+        throw new Error("Wrong Amount")
+      }
+
+      // insert order data
+      const orderPackageTour = await tx.order_package_tour.create({
+        data: {
+          tour_package_id: payload.tourPackageId,
+          payment_status: "PENDING",
+          payment_method: payload.paymentMethodId,
+          number_of_guests: payload.numberOfGuests,
+          total_payment: payload.totalPayment,
+          customer_id: user?.userId,
+          expired_at: new Date(expiredPaymentTime),
+          reference_number: referenceNumberGenerate
+        }
+      });
+
+      // insert transaction for log
+      await tx.payment_order_package_transaction.create({
+        data: {
+          order_package_id: orderPackageTour.order_tour_package_id,
+          reference_number: orderPackageTour.reference_number,
+          trigger_source: 'USER',
+          payment_status: 'PENDING'
+        }
+      })
+
+      const dataResultConvert: CreateOrderPackageTourResponseDTO = {
+        orderTourPackageId: orderPackageTour.order_tour_package_id,
+        tourPackageId: orderPackageTour.tour_package_id,
+        paymentMethodId: orderPackageTour.payment_method,
+        paymentStatus: orderPackageTour.payment_status,
+        totalPayment: orderPackageTour.total_payment?.toString(),
+        referenceNumber: orderPackageTour.reference_number,
+        expiredAt: orderPackageTour.expired_at
+      }
+
+      return dataResultConvert;
+
+    })
+
+    // const EXPIRED_PAYMENT_MINUTES = 10
+    // const now = new Date();
+    // const expiredPaymentTime = now.getTime() + (EXPIRED_PAYMENT_MINUTES * 60 * 1000)
+
+    // const UIDReferenceNumber = uuidv4()
+
+    // const referenceNumberGenerate = `TRF-${UIDReferenceNumber}`
+
+    // const result = await prisma.order_package_tour.create({
+    //   data: {
+    //     tour_package_id: payload.tourPackageId,
+    //     payment_status: "PENDING",
+    //     payment_method: payload.paymentMethodId,
+    //     number_of_guests: payload.numberOfGuests,
+    //     total_payment: payload.totalPayment,
+    //     customer_id: user?.userId,
+    //     expired_at: new Date(expiredPaymentTime),
+    //     reference_number: referenceNumberGenerate
+    //   }
+    // });
+
+    // const dataResultConvert: CreateOrderPackageTourResponseDTO = {
+    //   orderTourPackageId: result.order_tour_package_id,
+    //   tourPackageId: result.tour_package_id,
+    //   paymentMethodId: result.payment_method,
+    //   paymentStatus: result.payment_status,
+    //   totalPayment: result.total_payment?.toString(),
+    //   referenceNumber: result.reference_number,
+    //   expiredAt: result.expired_at
+    // }
+
+    // return dataResultConvert;
   };
 
   const getOrderPackage = async (user: UserDataInToken) => {

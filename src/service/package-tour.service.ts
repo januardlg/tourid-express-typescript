@@ -43,6 +43,7 @@ const PackageTourService = () => {
                 end_date: true,
                 activities: true,
                 hostelry_partner_id: true,
+                quota: true,
                 hostelry_partner: {
                     select: {
                         hostelry_name: true
@@ -64,6 +65,7 @@ const PackageTourService = () => {
                 starDate: data.start_date as Date,
                 endDate: data.end_date as Date,
                 activities: data.activities as IActivity[],
+                quota: data.quota as number,
                 hostelryPartnerId: data.hostelry_partner_id as number,
                 hostelryPartnerName: data.hostelry_partner?.hostelry_name as string,
                 createdAt: data.created_at,
@@ -115,6 +117,7 @@ const PackageTourService = () => {
                 start_date: true,
                 end_date: true,
                 activities: true,
+                quota: true,
                 hostelry_partner_id: true,
                 hostelry_partner: {
                     select: {
@@ -140,6 +143,7 @@ const PackageTourService = () => {
             starDate: result.start_date as Date,
             endDate: result.end_date as Date,
             activities: result.activities as IActivity[],
+            quota: result.quota as number,
             hostelryPartnerId: result.hostelry_partner_id as number,
             hostelryPartnerName: result?.hostelry_partner?.hostelry_name as string,
             hostelryPartnerLocation: result?.hostelry_partner?.hostelry_location as string,
@@ -162,6 +166,7 @@ const PackageTourService = () => {
                 end_date: pacTourPayload.endDate,
                 activities: pacTourPayload.activities,
                 hostelry_partner_id: pacTourPayload.hosterlyPartnerId,
+                quota: pacTourPayload.quota
             }
         })
 
@@ -173,6 +178,7 @@ const PackageTourService = () => {
             starDate: result.start_date as Date,
             endDate: result.end_date as Date,
             activities: result.activities as IActivity[],
+            quota: result.quota as number,
             hostelryPartnerId: result.hostelry_partner_id as number,
             createdAt: result.created_at,
             updatedAt: result.updated_at,

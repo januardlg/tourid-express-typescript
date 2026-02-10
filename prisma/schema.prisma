@@ -37,7 +37,7 @@ model order_package_tour {
   total_payment                     Decimal                             @db.Decimal
   payment_status                    String                              @default("PENDING") @db.VarChar(50)
   payment_method                    Int
-  reference_number                  String                              @unique @db.VarChar(50)
+  reference_number                  String                              @unique @db.VarChar(200)
   expired_at                        DateTime                            @db.Timestamp(6)
   updated_at                        DateTime?                           @db.Timestamp(6)
   users                             users                               @relation(fields: [customer_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
@@ -57,6 +57,7 @@ model package_tour_product {
   created_at          DateTime             @default(now()) @db.Timestamp(6)
   updated_at          DateTime             @default(now()) @db.Timestamp(6)
   hostelry_partner_id Int?
+  quota               Int
   order_package_tour  order_package_tour[]
   hostelry_partner    hostelry_partner?    @relation(fields: [hostelry_partner_id], references: [hostelry_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_hostelry_partner")
 }
