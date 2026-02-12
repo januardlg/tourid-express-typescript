@@ -1,0 +1,12 @@
+export const PAYMENT_STATUS = {
+    PENDING: 'PENDING',
+    WAITING_VERIFICATION: 'WAITING_VERIFICATION',
+    EXPIRED: 'EXPIRED',
+    PAID: 'PAID'
+}
+
+export const TRIGGER_SOURCE = {
+    USER: 'USER',
+    SYSTEM: 'SYSTEM',
+    BANK: 'BANK'
+}

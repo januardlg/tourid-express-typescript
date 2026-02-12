@@ -8,8 +8,11 @@ import type {
   AddOrderPackagePayloadDTO,
   CreateOrderPackageTourResponseDTO,
   OrderPackageResponseDTO,
+  VerifyPaymentPayloadDTO,
+  VerifyPaymentResponseDTO,
 } from "../dtos/order-package.dto.js";
 import type { UserDataInToken } from "../dtos/user.dto.js";
+import { PAYMENT_STATUS, TRIGGER_SOURCE } from "../lib/enum.js";
 
 const OrderPackageService = () => {
   const addOrderPackage = async (
@@ -48,7 +51,7 @@ const OrderPackageService = () => {
       const ordered_package_tour = await tx.order_package_tour.aggregate({
         where: {
           tour_package_id: payload.tourPackageId,
-          payment_status: 'PAID'
+          payment_status: PAYMENT_STATUS.PAID
         },
         _sum: {
           number_of_guests: true
@@ -71,7 +74,7 @@ const OrderPackageService = () => {
       const orderPackageTour = await tx.order_package_tour.create({
         data: {
           tour_package_id: payload.tourPackageId,
-          payment_status: "PENDING",
+          payment_status: PAYMENT_STATUS.PENDING,
           payment_method: payload.paymentMethodId,
           number_of_guests: payload.numberOfGuests,
           total_payment: payload.totalPayment,
@@ -86,8 +89,8 @@ const OrderPackageService = () => {
         data: {
           order_package_id: orderPackageTour.order_tour_package_id,
           reference_number: orderPackageTour.reference_number,
-          trigger_source: 'USER',
-          payment_status: 'PENDING'
+          trigger_source: TRIGGER_SOURCE.USER,
+          payment_status: PAYMENT_STATUS.PENDING
         }
       })
 
@@ -105,38 +108,6 @@ const OrderPackageService = () => {
 
     })
 
-    // const EXPIRED_PAYMENT_MINUTES = 10
-    // const now = new Date();
-    // const expiredPaymentTime = now.getTime() + (EXPIRED_PAYMENT_MINUTES * 60 * 1000)
-
-    // const UIDReferenceNumber = uuidv4()
-
-    // const referenceNumberGenerate = `TRF-${UIDReferenceNumber}`
-
-    // const result = await prisma.order_package_tour.create({
-    //   data: {
-    //     tour_package_id: payload.tourPackageId,
-    //     payment_status: "PENDING",
-    //     payment_method: payload.paymentMethodId,
-    //     number_of_guests: payload.numberOfGuests,
-    //     total_payment: payload.totalPayment,
-    //     customer_id: user?.userId,
-    //     expired_at: new Date(expiredPaymentTime),
-    //     reference_number: referenceNumberGenerate
-    //   }
-    // });
-
-    // const dataResultConvert: CreateOrderPackageTourResponseDTO = {
-    //   orderTourPackageId: result.order_tour_package_id,
-    //   tourPackageId: result.tour_package_id,
-    //   paymentMethodId: result.payment_method,
-    //   paymentStatus: result.payment_status,
-    //   totalPayment: result.total_payment?.toString(),
-    //   referenceNumber: result.reference_number,
-    //   expiredAt: result.expired_at
-    // }
-
-    // return dataResultConvert;
   };
 
   const getOrderPackage = async (user: UserDataInToken) => {
@@ -198,7 +169,52 @@ const OrderPackageService = () => {
     return convertedResult;
   };
 
-  return { addOrderPackage, getOrderPackage };
+
+  const verifyPaymentTransaction = async (data: VerifyPaymentPayloadDTO) => {
+
+    return prisma.$transaction(async (tx) => {
+
+      const orderPackage = await tx.order_package_tour.findUnique({
+        where: { order_tour_package_id: data.orderTourPackageId, reference_number: data.referenceNumber, payment_status: PAYMENT_STATUS.PENDING }
+      })
+
+      if (!orderPackage) {
+        throw new Error("There is No Pending Payment Order")
+      }
+
+
+      const expiredPaymentTime = new Date(orderPackage.expired_at).getTime()
+      const nowTime = new Date().getTime()
+
+      const isExpired: boolean = expiredPaymentTime > nowTime ? true : false
+
+      const result = await prisma.order_package_tour.update({
+        where: { order_tour_package_id: data.orderTourPackageId },
+        data: {
+          payment_status: isExpired ? PAYMENT_STATUS.EXPIRED : PAYMENT_STATUS.WAITING_VERIFICATION,
+        }
+      })
+
+      await tx.payment_order_package_transaction.create({
+        data: {
+          order_package_id: data.orderTourPackageId,
+          reference_number: data.referenceNumber,
+          trigger_source: TRIGGER_SOURCE.USER,
+          payment_status: isExpired ? PAYMENT_STATUS.EXPIRED : PAYMENT_STATUS.WAITING_VERIFICATION
+        }
+      })
+
+      const convertedResult: VerifyPaymentResponseDTO = {
+        orderTourPackageId: result.order_tour_package_id,
+        referenceNumber: result.reference_number,
+        paymentStatus: result.payment_status,
+      }
+
+      return convertedResult
+    })
+  }
+
+  return { addOrderPackage, getOrderPackage, verifyPaymentTransaction };
 };
 
 export default OrderPackageService;

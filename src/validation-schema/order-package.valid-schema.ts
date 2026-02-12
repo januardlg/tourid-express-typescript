@@ -6,3 +6,8 @@ export const addOrderPackagePayloadSchema = z.object({
   numberOfGuests: z.number(),
   totalPayment: z.string().regex(/^\d+(\.\d{1,2})?$/, "must be a valid monetary amount"),
 });
+
+export const VerifyPaymentPayloadSchema = z.object({
+  referenceNumber: z.string(),
+  orderTourPackageId: z.number()
+})

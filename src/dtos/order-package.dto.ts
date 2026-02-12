@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import type { addOrderPackagePayloadSchema } from "../validation-schema/order-package.valid-schema.js";
+import type { addOrderPackagePayloadSchema, VerifyPaymentPayloadSchema } from "../validation-schema/order-package.valid-schema.js";
 
 export interface CreateOrderPackageTourResponseDTO {
   orderTourPackageId: number,
@@ -32,3 +32,11 @@ export interface OrderPackageResponseDTO {
 export type AddOrderPackagePayloadDTO = z.infer<
   typeof addOrderPackagePayloadSchema
 >;
+
+export type VerifyPaymentPayloadDTO = z.infer<typeof VerifyPaymentPayloadSchema>;
+
+export interface VerifyPaymentResponseDTO {
+  orderTourPackageId: number;
+  referenceNumber: string;
+  paymentStatus: string;
+}
