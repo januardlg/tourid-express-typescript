@@ -182,11 +182,10 @@ const OrderPackageService = () => {
         throw new Error("There is No Pending Payment Order")
       }
 
+      const expiredPaymentTime = new Date(orderPackage.expired_at)
+      const nowTime = new Date()
 
-      const expiredPaymentTime = new Date(orderPackage.expired_at).getTime()
-      const nowTime = new Date().getTime()
-
-      const isExpired: boolean = expiredPaymentTime > nowTime ? true : false
+      const isExpired: boolean = nowTime > expiredPaymentTime ? true : false
 
       const result = await prisma.order_package_tour.update({
         where: { order_tour_package_id: data.orderTourPackageId },
