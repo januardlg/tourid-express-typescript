@@ -97,16 +97,3 @@ enum paymentmethod {
   VA
   TRANSFER_BANK
 }
-
-enum paymentstatus {
-  SUCCESS
-  FAILED
-}
-
-enum statustour {
-  NEW
-  PAID
-  ON_TRIP
-  FINISHED
-  CANCELED
-}

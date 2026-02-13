@@ -16,6 +16,7 @@ import blogRoutes from './routes/blogs.js'
 import userRoutes from './routes/user.js'
 import orderPackageRoutes from './routes/order-package.js'
 import packageTourRoutes from './routes/package-tour.js'
+import externalBankRoutes from './routes/external-dummy-bank.js'
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use('/blogs', blogRoutes)
 app.use('/users', userRoutes)
 app.use('/orderPackageTour', orderPackageRoutes)
 app.use('/packageTour', packageTourRoutes)
+app.use('/external-bank', externalBankRoutes)
 
 // Global error handler (should be after routes)
 // app.use(errorHandler);

@@ -186,11 +186,12 @@ const OrderPackageService = () => {
       const nowTime = new Date()
 
       const isExpired: boolean = nowTime > expiredPaymentTime ? true : false
+      const paymentStatus = isExpired ? PAYMENT_STATUS.EXPIRED : PAYMENT_STATUS.WAITING_VERIFICATION
 
       const result = await prisma.order_package_tour.update({
         where: { order_tour_package_id: data.orderTourPackageId },
         data: {
-          payment_status: isExpired ? PAYMENT_STATUS.EXPIRED : PAYMENT_STATUS.WAITING_VERIFICATION,
+          payment_status: paymentStatus,
         }
       })
 
@@ -199,7 +200,7 @@ const OrderPackageService = () => {
           order_package_id: data.orderTourPackageId,
           reference_number: data.referenceNumber,
           trigger_source: TRIGGER_SOURCE.USER,
-          payment_status: isExpired ? PAYMENT_STATUS.EXPIRED : PAYMENT_STATUS.WAITING_VERIFICATION
+          payment_status: paymentStatus
         }
       })
 
