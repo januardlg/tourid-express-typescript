@@ -1,8 +1,14 @@
 import { z } from "zod";
 
+
+export const acitivyTitleSchma = z.object({
+    id: z.number(),
+    title: z.string()
+})
+
 export const activitySchema = z.object({
-    day: z.string().regex(/^\d+$/, "must be a number string"),
-    title: z.string().min(5, 'too short (minimal character is 5'),
+    day: z.number().int().positive(),
+    titleList: z.array(acitivyTitleSchma)
 });
 
 
@@ -13,6 +19,6 @@ export const addPackageTourPayloadSchema = z.object({
     startDate: z.string(),
     endDate: z.string(),
     activities: z.array(activitySchema),
-    hosterlyPartnerId: z.number(),
-    quota: z.number()
+    hosterlyPartnerId: z.number().int().positive(),
+    quota: z.number().int().positive()
 })
