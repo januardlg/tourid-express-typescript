@@ -8,6 +8,8 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerOptions from './swagger/swagger-option.js';
 
+import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes'
+
 import cookieParser from 'cookie-parser'
 
 // import routes
@@ -16,8 +18,12 @@ import blogRoutes from './routes/blogs.js'
 import userRoutes from './routes/user.js'
 import orderPackageRoutes from './routes/order-package.js'
 import packageTourRoutes from './routes/package-tour.js'
+import hosterlyPartnerRoutes from './routes/hosterly-partner.js'
+import paymentMethodRoutes from './routes/payment-method.js'
+import externalBankRoutes from './routes/external-dummy-bank.js'
 
 const app = express();
+const theme = new SwaggerTheme();
 
 app.use(express.json());
 app.use(morgan("dev"));
@@ -31,6 +37,9 @@ app.use('/blogs', blogRoutes)
 app.use('/users', userRoutes)
 app.use('/orderPackageTour', orderPackageRoutes)
 app.use('/packageTour', packageTourRoutes)
+app.use('/hosterly-partner', hosterlyPartnerRoutes)
+app.use('/payment-method', paymentMethodRoutes)
+app.use('/external-bank', externalBankRoutes)
 
 // Global error handler (should be after routes)
 // app.use(errorHandler);
@@ -38,7 +47,12 @@ app.use('/packageTour', packageTourRoutes)
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+const options = {
+    explorer: true,
+    customCss: theme.getBuffer(SwaggerThemeNameEnum.DARK)
+};
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, options));
 
 
 app.use(function (req, res, next) {

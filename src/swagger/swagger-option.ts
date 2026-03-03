@@ -11,7 +11,7 @@ const swaggerOptions: Options = {
         },
         servers: [
             {
-                url: 'http://localhost:3000', // Replace with your API base URL
+                url: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://tourid-express-typescript.vercel.app',
                 description: 'Development server',
             },
         ],
@@ -231,6 +231,75 @@ const swaggerOptions: Options = {
                         hostelryPartnerId: 4,
                         hostelryPartnerName: "Horas Hotel"
                     }
+                },
+                PaymentMethodResponse: {
+                    type: "object",
+                    properties: {
+                        paymentMethodsId: { type: "integer", description: "The auto-generated id of the payment method" },
+                        code: { type: "string", description: "Code of the payment method" },
+                        name: { type: "string", description: "Name of the payment method" },
+                        type: { type: "string", description: "Type of the payment method" },
+                        destinationAccount: { type: "string", description: "Destination Account for payment " },
+                        isActive: { type: "boolean", description: "Available of payment method" },
+                        createdAt: { type: "string", format: 'date', description: "The date of the payment method was added", example: '2025-09-18T08:46:59.432Z' },
+                    },
+                    example: {
+                        paymentMethodsId: 1,
+                        code: "TF_BCA",
+                        name: "Transfer Bank BCA",
+                        type: "TRANSFER_BANK",
+                        destinationAccount: "22200000",
+                        isActive: true,
+                        createdAt: "2026-02-05T15:22:34.845Z"
+                    }
+                },
+                HosterlyPartnerResponse: {
+                    type: "object",
+                    properties: {
+                        hostelryId: { type: "integer", description: "The auto-generated id of the hosterly partner" },
+                        hostelryName: { type: "string", description: "Name of the hosterly partner" },
+                        hostelryLevel: { type: "integer", description: "Hotel Level" },
+                        hostelryAddress: { type: "string", description: "Address of the hosterly hotel" },
+                        hostelryLocation: { type: "string", description: "Location Link of the hosterly hotel" },
+                    },
+                    example: {
+                        hostelryId: 1,
+                        hostelryName: "Sapadia",
+                        hostelryLevel: 4,
+                        hostelryAddress: "Tuktuk",
+                        hostelryLocation: "google.com/maps/place/hotel+indonesia/data=!4m2!3m1!1s0x2e69f421963cd607:0x503cb9e9306e657a?sa=X&ved=1t:242&ictx=111"
+                    },
+                },
+                VerifyPaidRequest: {
+                    type: "object",
+                    properties: {
+                        referenceNumber: { type: "string", description: "Referecne Number for Payment", example: 'TRF-c520f3b5-5caf-4d81-b375-33f078cb0327' },
+                        orderTourPackageId: { type: "integer", description: "Order Id for payment", example: '24' },
+                        statusBank: { type: "string", description: "Status payment from Bank", example: 'SUCCESSFUL' },
+                    },
+                    required: ['referenceNumber', 'orderTourPackageId', 'statusBank'],
+                    example: {
+                        orderTourPackageId: 24,
+                        referenceNumber: "TRF-c520f3b5-5caf-4d81-b375-33f078cb0327",
+                        statusBank: "SUCCESSFUL"
+                    }
+                },
+                VerifyPaidResponse: {
+                    type: "object",
+                    properties: {
+                        orderTourPackageId: { type: "integer", description: "The auto-generated id of the tour order" },
+                        referenceNumber: { type: "string", description: "Referecne Number for Payment" },
+                        statusBank: { type: "string", description: "Status payment from Bank" },
+                        paymentStatus: { type: "string", description: "Status payment in log" },
+                        lastUpdateTime: { type: "string", format: 'date', description: "The date status payment was added to log" },
+                    },
+                    example: {
+                        orderTourPackageId: 14,
+                        referenceNumber: "TRF-c520f3b5-5caf-4d81-b375-33f078cb0327",
+                        statusBank: "SUCCESSFUL",
+                        paymentStatus: "PAID",
+                        lastUpdateTime: "2026-02-05T15:22:34.845Z",
+                    },
                 }
             },
         },

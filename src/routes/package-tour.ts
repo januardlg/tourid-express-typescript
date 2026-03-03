@@ -5,14 +5,14 @@ import passport from "../utils/passport-authenticate.js"
 
 
 // controller
-import { addPackageTour } from "../controller/package-tour.controller.js";
+import { addPackageTour, getDetailPackageTourController } from "../controller/package-tour.controller.js";
 import { validateData } from "../middlewares/validation-payload.js";
 import { addPackageTourPayloadSchema } from "../validation-schema/package-tour.valid-schema.js";
 
 // middlweare
 import { authorizeAdmin } from "../middlewares/authorize.js";
 
-import { getAllPackageTourController } from "../controller/package-tour.controller.js";
+import { getAllPackageTourController, } from "../controller/package-tour.controller.js";
 
 
 const router = Router()
@@ -90,6 +90,34 @@ const router = Router()
  *       500:
  *         description: internal server error
  *
+ * /packageTour/{id}:
+ *  get:
+ *      summary: Retrieve detail a Package Tour
+ *      tags: [Package-Tour]
+ *      parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The Package Tour id
+ *      responses:
+ *       200:
+ *         description: The object of Package Tour
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/BaseResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/PackageTourResponse'
+ *       404:
+ *         description: data not found
+ *       500:
+ *         description: internal server error
+ * 
  *  post:
  *      summary: Add package tour product
  *      tags: [Package-Tour]
@@ -124,6 +152,7 @@ const router = Router()
  */
 
 router.get("/", getAllPackageTourController)
+router.get("/:packageTourId", getDetailPackageTourController)
 router.post('/', passport.authenticate("jwt", { session: false }), validateData(addPackageTourPayloadSchema), authorizeAdmin, addPackageTour)
 
 

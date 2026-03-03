@@ -1,5 +1,6 @@
 import { prisma } from "../lib/prisma.js";
-import type { AddPackageTourPayloadDTO, PackageTourProductDTO, PackageTourQueryDTO } from "../dtos/package-tour.dto.js"
+import type { AddPackageTourPayloadDTO, IActivity, MetaDataPackageTourDTO, PackageTourProductDTO, PackageTourQueryDTO } from "../dtos/package-tour.dto.js"
+import { createError } from "../utils/handle-response.js";
 
 
 
@@ -17,12 +18,15 @@ const PackageTourService = () => {
         const filterBy = queryParams.filterBy ?? "name_package";
         const filterValue = queryParams.filterValue ?? "";
 
+        const sortBy = queryParams.sortBy ?? "created_at"
+        const order = queryParams.order ?? "desc"
+
 
         const result = await prisma.package_tour_product.findMany({
             take: take,
             skip: skip,
             orderBy: {
-                [queryParams.sortBy ?? "created_at"]: queryParams.order ?? "desc",
+                [sortBy]: queryParams.order ?? order,
             },
             where: {
                 [filterBy]: {
@@ -39,6 +43,7 @@ const PackageTourService = () => {
                 end_date: true,
                 activities: true,
                 hostelry_partner_id: true,
+                quota: true,
                 hostelry_partner: {
                     select: {
                         hostelry_name: true
@@ -55,11 +60,12 @@ const PackageTourService = () => {
             return {
                 packageId: data.package_id,
                 namePackage: data.name_package as string,
-                cost: data.cost,
+                cost: data.cost?.toString() as string,
                 description: data.description as string,
                 starDate: data.start_date as Date,
                 endDate: data.end_date as Date,
-                activities: data.activities,
+                activities: data.activities as IActivity[],
+                quota: data.quota as number,
                 hostelryPartnerId: data.hostelry_partner_id as number,
                 hostelryPartnerName: data.hostelry_partner?.hostelry_name as string,
                 createdAt: data.created_at,
@@ -69,7 +75,7 @@ const PackageTourService = () => {
 
         const totalData = await prisma.package_tour_product.count({
             orderBy: {
-                [queryParams.sortBy ?? "created_at"]: queryParams.order ?? "desc",
+                [sortBy]: queryParams.order ?? order,
             },
             where: {
                 [filterBy]: {
@@ -79,39 +85,112 @@ const PackageTourService = () => {
             },
         });
 
-        console.log({ totalData })
-
-        const resultConvert = {
+        const resultConvert: {
+            data: PackageTourProductDTO[],
+            meta: MetaDataPackageTourDTO
+        } = {
             data: dataResultConvert,
             meta: {
                 page: pageNum,
                 limit: limitNum,
                 totalPages: Math.ceil(totalData / take),
+                sortBy: sortBy,
+                order: order,
+                filterBy: filterBy,
+                filterValue: filterValue
             }
         }
 
         return resultConvert;
     };
 
+    const getDetailPackageTour = async (packageId: number) => {
+        const result = await prisma.package_tour_product.findUnique({
+            where: {
+                package_id: packageId
+            },
+            select: {
+                package_id: true,
+                name_package: true,
+                cost: true,
+                description: true,
+                start_date: true,
+                end_date: true,
+                activities: true,
+                quota: true,
+                hostelry_partner_id: true,
+                hostelry_partner: {
+                    select: {
+                        hostelry_name: true,
+                        hostelry_location: true
+                    }
+                },
+                created_at: true,
+                updated_at: true,
+
+            }
+        })
+
+        if (!result) {
+            throw createError("No data found", 404);
+        }
+
+        const dataResultConvert: PackageTourProductDTO = {
+            packageId: result.package_id,
+            namePackage: result.name_package as string,
+            cost: result.cost?.toString() as string,
+            description: result.description as string,
+            starDate: result.start_date as Date,
+            endDate: result.end_date as Date,
+            activities: result.activities as IActivity[],
+            quota: result.quota as number,
+            hostelryPartnerId: result.hostelry_partner_id as number,
+            hostelryPartnerName: result?.hostelry_partner?.hostelry_name as string,
+            hostelryPartnerLocation: result?.hostelry_partner?.hostelry_location as string,
+            createdAt: result.created_at,
+            updatedAt: result.updated_at,
+        }
+
+        return dataResultConvert
+    }
+
+
     const addPackageTour = async (pacTourPayload: AddPackageTourPayloadDTO) => {
 
         const result = await prisma.package_tour_product.create({
             data: {
                 name_package: pacTourPayload.packageName,
-                cost: pacTourPayload.cost,
+                cost: parseInt(pacTourPayload.cost, 10),
                 description: pacTourPayload.description,
                 start_date: pacTourPayload.startDate,
                 end_date: pacTourPayload.endDate,
                 activities: pacTourPayload.activities,
                 hostelry_partner_id: pacTourPayload.hosterlyPartnerId,
+                quota: pacTourPayload.quota
             }
         })
 
-        return result
+        const dataResultConvert: PackageTourProductDTO = {
+            packageId: result.package_id,
+            namePackage: result.name_package as string,
+            cost: result.cost?.toString() as string,
+            description: result.description as string,
+            starDate: result.start_date as Date,
+            endDate: result.end_date as Date,
+            activities: result.activities as IActivity[],
+            quota: result.quota as number,
+            hostelryPartnerId: result.hostelry_partner_id as number,
+            createdAt: result.created_at,
+            updatedAt: result.updated_at,
+        }
+
+
+        return dataResultConvert
 
     }
 
-    return { getAllPackageTour, addPackageTour };
+
+    return { getAllPackageTour, getDetailPackageTour, addPackageTour };
 };
 
 export default PackageTourService;
