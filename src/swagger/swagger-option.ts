@@ -11,7 +11,7 @@ const swaggerOptions: Options = {
         },
         servers: [
             {
-                url: 'http://localhost:3000', // Replace with your API base URL
+                url: process.env.NODE_ENV,
                 description: 'Development server',
             },
         ],
