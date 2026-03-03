@@ -1,4 +1,4 @@
-import type { HosterlyPartnerDTO } from "../dtos/hosterly-partner.dto.js"
+import type { HosterlyPartnerResponseDTO } from "../dtos/hosterly-partner.dto.js"
 import { prisma } from "../lib/prisma.js"
 
 const HosterlyPartnerService = () => {
@@ -15,7 +15,7 @@ const HosterlyPartnerService = () => {
             }
         })
 
-        const convertedResult: HosterlyPartnerDTO[] = result.map((hosterlyPartner) => {
+        const convertedResult: HosterlyPartnerResponseDTO[] = result.map((hosterlyPartner) => {
             return {
                 hostelryId: hosterlyPartner.hostelry_id,
                 hostelryName: hosterlyPartner.hostelry_name as string,

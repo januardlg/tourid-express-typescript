@@ -1,4 +1,4 @@
-import type { PaymentMethodDTO } from "../dtos/payment-method.dto.js"
+import type { PaymentMethodResponseDTO } from "../dtos/payment-method.dto.js"
 import { prisma } from "../lib/prisma.js"
 
 const PaymentMethodService = () => {
@@ -17,15 +17,15 @@ const PaymentMethodService = () => {
             }
         })
 
-        const convertedResult: PaymentMethodDTO[] = result.map((paymentMethod) => {
+        const convertedResult: PaymentMethodResponseDTO[] = result.map((paymentMethod) => {
             return {
-                payment_methods_id: paymentMethod.payment_methods_id,
+                paymentMethodsId: paymentMethod.payment_methods_id,
                 code: paymentMethod.code,
                 name: paymentMethod.name,
                 type: paymentMethod.type as string,
-                destination_account: paymentMethod.destination_account,
-                is_active: paymentMethod.is_active as boolean,
-                created_at: paymentMethod.created_at
+                destinationAccount: paymentMethod.destination_account,
+                isActive: paymentMethod.is_active as boolean,
+                createdAt: paymentMethod.created_at
             }
         })
 

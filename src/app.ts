@@ -8,6 +8,8 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerOptions from './swagger/swagger-option.js';
 
+import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes'
+
 import cookieParser from 'cookie-parser'
 
 // import routes
@@ -21,6 +23,7 @@ import paymentMethodRoutes from './routes/payment-method.js'
 import externalBankRoutes from './routes/external-dummy-bank.js'
 
 const app = express();
+const theme = new SwaggerTheme();
 
 app.use(express.json());
 app.use(morgan("dev"));
@@ -44,7 +47,12 @@ app.use('/external-bank', externalBankRoutes)
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+const options = {
+    explorer: true,
+    customCss: theme.getBuffer(SwaggerThemeNameEnum.DARK)
+};
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, options));
 
 
 app.use(function (req, res, next) {

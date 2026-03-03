@@ -1,10 +1,10 @@
 
-export interface PaymentMethodDTO {
-    payment_methods_id: number,
+export interface PaymentMethodResponseDTO {
+    paymentMethodsId: number,
     code: string,
     name: string,
     type: string,
-    destination_account: string,
-    is_active: boolean,
-    created_at: Date
+    destinationAccount: string,
+    isActive: boolean,
+    createdAt: Date
 }

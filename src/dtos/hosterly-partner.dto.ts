@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export interface HosterlyPartnerDTO {
+export interface HosterlyPartnerResponseDTO {
     hostelryId: number,
     hostelryName: string,
     hostelryLevel: number,
