@@ -6,7 +6,7 @@ const router = Router();
 /**
  * @swagger
  * tags: 
- *  name: Payment Method
+ *  name: Payment Methods
  *  description: Payment Method
  * /payment-method:
  *  get:

@@ -1,6 +1,7 @@
 import type { VerifyPaidFromBankPayloadDTO, VerifyPaidFromBankResponse } from "../dtos/external-dummy-bank.dto.js";
 import { PAYMENT_STATUS, STATUS_BANK_PAYMENT, TRIGGER_SOURCE } from "../lib/enum.js";
 import { prisma } from "../lib/prisma.js";
+import { createError } from "../utils/handle-response.js";
 
 const ExternalDummyBankService = () => {
 
@@ -11,7 +12,7 @@ const ExternalDummyBankService = () => {
             })
 
             if (!orderPackage) {
-                throw new Error("There is No Pending Payment Order")
+                throw createError("There is No Pending Payment Order", 404)
             }
 
             const paymentStatus = data.statusBank === STATUS_BANK_PAYMENT.SUCCESSFUL ? PAYMENT_STATUS.PAID : PAYMENT_STATUS.FAILED

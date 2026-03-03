@@ -269,6 +269,37 @@ const swaggerOptions: Options = {
                         hostelryAddress: "Tuktuk",
                         hostelryLocation: "google.com/maps/place/hotel+indonesia/data=!4m2!3m1!1s0x2e69f421963cd607:0x503cb9e9306e657a?sa=X&ved=1t:242&ictx=111"
                     },
+                },
+                VerifyPaidRequest: {
+                    type: "object",
+                    properties: {
+                        referenceNumber: { type: "string", description: "Referecne Number for Payment", example: 'TRF-c520f3b5-5caf-4d81-b375-33f078cb0327' },
+                        orderTourPackageId: { type: "integer", description: "Order Id for payment", example: '24' },
+                        statusBank: { type: "string", description: "Status payment from Bank", example: 'SUCCESSFUL' },
+                    },
+                    required: ['referenceNumber', 'orderTourPackageId', 'statusBank'],
+                    example: {
+                        orderTourPackageId: 24,
+                        referenceNumber: "TRF-c520f3b5-5caf-4d81-b375-33f078cb0327",
+                        statusBank: "SUCCESSFUL"
+                    }
+                },
+                VerifyPaidResponse: {
+                    type: "object",
+                    properties: {
+                        orderTourPackageId: { type: "integer", description: "The auto-generated id of the tour order" },
+                        referenceNumber: { type: "string", description: "Referecne Number for Payment" },
+                        statusBank: { type: "string", description: "Status payment from Bank" },
+                        paymentStatus: { type: "string", description: "Status payment in log" },
+                        lastUpdateTime: { type: "string", format: 'date', description: "The date status payment was added to log" },
+                    },
+                    example: {
+                        orderTourPackageId: 14,
+                        referenceNumber: "TRF-c520f3b5-5caf-4d81-b375-33f078cb0327",
+                        statusBank: "SUCCESSFUL",
+                        paymentStatus: "PAID",
+                        lastUpdateTime: "2026-02-05T15:22:34.845Z",
+                    },
                 }
             },
         },
