@@ -4,11 +4,11 @@ import { Router } from "express";
 import passport from "../utils/passport-authenticate.js";
 
 // routes
-import { addOrderPackageController, getOrderPackageController } from "../controller/order-package.controller.js";
+import { addOrderPackageController, getOrderPackageController, verifyPaymentTransactionController } from "../controller/order-package.controller.js";
 
 // Validation Schema
 import { validateData } from "../middlewares/validation-payload.js";
-import { addOrderPackagePayloadSchema } from "../validation-schema/order-package.valid-schema.js";
+import { addOrderPackagePayloadSchema, VerifyPaymentPayloadSchema } from "../validation-schema/order-package.valid-schema.js";
 
 const router = Router();
 
@@ -82,6 +82,13 @@ router.post(
   validateData(addOrderPackagePayloadSchema),
   passport.authenticate("jwt", { session: false }),
   addOrderPackageController
+);
+
+router.post(
+  "/verifyPayment",
+  validateData(VerifyPaymentPayloadSchema),
+  passport.authenticate("jwt", { session: false }),
+  verifyPaymentTransactionController
 );
 
 export default router;

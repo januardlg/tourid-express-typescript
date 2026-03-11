@@ -1,32 +1,41 @@
 import type { z } from "zod";
-import type { addPackageTourPayloadSchema } from "../validation-schema/package-tour.valid-schema.js";
+import type { activitySchema, addPackageTourPayloadSchema, acitivyTitleSchma } from "../validation-schema/package-tour.valid-schema.js";
 
 export type AddPackageTourPayloadDTO = z.infer<typeof addPackageTourPayloadSchema>
 export interface PackageTourQueryDTO {
     page?: string;
     limit?: string;
     sortBy?: string;
-    order?: string;
+    order?: "asc" | "desc";
     filterBy?: string;
     filterValue?: string;
 }
 
-
-interface IActivity {
-    day: string,
-    title: string
-}
+export type IActivity = z.infer<typeof activitySchema>
+export type IActivityTitle = z.infer<typeof acitivyTitleSchma>
 
 export interface PackageTourProductDTO {
     packageId: number,
     namePackage: string,
-    cost: any,
+    cost: string,
     description: string,
     starDate: Date,
     endDate: Date,
-    activities: any,
+    activities: IActivity[],
     hostelryPartnerId: number,
-    hostelryPartnerName: string;
+    quota: number,
+    hostelryPartnerName?: string;
+    hostelryPartnerLocation?: string;
     createdAt: Date,
     updatedAt: Date,
+}
+
+export interface MetaDataPackageTourDTO {
+    page: number;
+    limit: number;
+    totalPages: number;
+    sortBy: string;
+    order: "asc" | "desc";
+    filterBy: string;
+    filterValue: string;
 }
