@@ -28,6 +28,7 @@ const Userservice = () => {
         userId: user?.userId,
         username: user?.username,
         email: user?.email,
+        isAdmin: user?.isAdmin
       },
       process.env.secretKey as string,
       {
@@ -46,6 +47,7 @@ const Userservice = () => {
         userId: user?.userId,
         username: user?.username,
         email: user?.email,
+        isAdmin: user?.isAdmin
       },
       process.env.secretKeyRefreshToken as string,
       {
@@ -105,7 +107,8 @@ const Userservice = () => {
     const convertExistingUser: Partial<UserDataInToken> = {
       userId: existingUser?.user_id,
       email: existingUser?.email,
-      username: existingUser?.username
+      username: existingUser?.username,
+      isAdmin: existingUser?.is_admin
     }
 
 
