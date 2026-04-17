@@ -1,6 +1,7 @@
 import { prisma } from "../lib/prisma.js";
 import type { AddPackageTourPayloadDTO, IActivity, MetaDataPackageTourDTO, PackageTourProductDTO, PackageTourQueryDTO } from "../dtos/package-tour.dto.js"
 import { createError } from "../utils/handle-response.js";
+import { PAYMENT_STATUS } from "../lib/enum.js";
 
 
 
@@ -122,7 +123,8 @@ const PackageTourService = () => {
                 hostelry_partner: {
                     select: {
                         hostelry_name: true,
-                        hostelry_location: true
+                        hostelry_location: true,
+                        hostelry_address: true
                     }
                 },
                 created_at: true,
@@ -130,6 +132,18 @@ const PackageTourService = () => {
 
             }
         })
+
+        // get quota used
+        const ordered_package_tour = await prisma.order_package_tour.aggregate({
+            where: {
+                tour_package_id: packageId,
+                payment_status: PAYMENT_STATUS.PAID
+            },
+            _sum: {
+                number_of_guests: true
+            }
+        })
+        
 
         if (!result) {
             throw createError("No data found", 404);
@@ -144,9 +158,11 @@ const PackageTourService = () => {
             endDate: result.end_date as Date,
             activities: result.activities as IActivity[],
             quota: result.quota as number,
+            quotaRemaining: (result.quota as number) - (ordered_package_tour._sum.number_of_guests ?? 0),   
             hostelryPartnerId: result.hostelry_partner_id as number,
             hostelryPartnerName: result?.hostelry_partner?.hostelry_name as string,
             hostelryPartnerLocation: result?.hostelry_partner?.hostelry_location as string,
+            hostelryAddress: result?.hostelry_partner?.hostelry_address as string,
             createdAt: result.created_at,
             updatedAt: result.updated_at,
         }
