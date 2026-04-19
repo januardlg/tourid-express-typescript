@@ -17,6 +17,7 @@ export interface OrderPackageResponseDTO {
   packageTourEndDate: Date;
   hostelryName: string;
   hostelryLocation: string;
+  hostelryAddress: string;
   paymentStatus: string;
   paymentMethodName: string;
   paymentDestinationAccount: string;

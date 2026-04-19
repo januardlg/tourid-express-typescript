@@ -127,7 +127,8 @@ const OrderPackageService = () => {
             hostelry_partner: {
               select: {
                 hostelry_name: true,
-                hostelry_location: true
+                hostelry_location: true,
+                hostelry_address: true
               }
             }
           },
@@ -147,6 +148,8 @@ const OrderPackageService = () => {
       }
     });
 
+    console.log("result", user, result, )
+
     const convertedResult: OrderPackageResponseDTO[] = result.map((order) => {
       return {
         orderTourPackageId: order.order_tour_package_id as number,
@@ -155,6 +158,7 @@ const OrderPackageService = () => {
         packageTourEndDate: order.package_tour_product.end_date as Date,
         hostelryName: order.package_tour_product.hostelry_partner?.hostelry_name as string,
         hostelryLocation: order.package_tour_product.hostelry_partner?.hostelry_location as string,
+        hostelryAddress: order.package_tour_product.hostelry_partner?.hostelry_address as string,
         paymentStatus: order.payment_status as string,
         paymentMethodName: order.payment_methods.name as string,
         paymentDestinationAccount: order.payment_methods.destination_account as string,
