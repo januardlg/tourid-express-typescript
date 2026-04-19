@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 
 // DTO
 import type { UserDataInToken } from "../dtos/user.dto.js";
-import type { AddOrderPackagePayloadDTO, CreateOrderPackageTourResponseDTO, OrderPackageResponseDTO, VerifyPaymentPayloadDTO, VerifyPaymentResponseDTO } from "../dtos/order-package.dto.js";
+import type { AddOrderPackagePayloadDTO, CreateOrderPackageTourResponseDTO, MetaOrderPackageTourDTO, OrderPackageResponseDTO, OrderPackageTourQueryDTO, VerifyPaymentPayloadDTO, VerifyPaymentResponseDTO } from "../dtos/order-package.dto.js";
 
 // service
 import OrderPackageService from "../service/order-package.service.js";
@@ -37,7 +37,7 @@ export const addOrderPackageController = async (
 };
 
 export const getOrderPackageController = async (
-  req: Request,
+  req: Request<{}, {}, {}, OrderPackageTourQueryDTO>,
   res: Response,
   next: NextFunction
 ) => {
@@ -46,9 +46,9 @@ export const getOrderPackageController = async (
 
     const user: UserDataInToken = req.user as UserDataInToken
 
-    const orders = await getOrderPackage(user);
+    const orderedPackageTour = await getOrderPackage(user, req.query);
 
-    res.json(createResponse<OrderPackageResponseDTO[]>(200, "success", "success get orders", orders));
+    res.json(createResponse<OrderPackageResponseDTO[], MetaOrderPackageTourDTO>(200, "success", "success get orders", orderedPackageTour.data, orderedPackageTour.meta));
   } catch (error) {
     next(error);
   }

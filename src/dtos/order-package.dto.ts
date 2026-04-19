@@ -1,6 +1,7 @@
 import type { z } from "zod";
 import type { addOrderPackagePayloadSchema, VerifyPaymentPayloadSchema } from "../validation-schema/order-package.valid-schema.js";
 
+
 export interface CreateOrderPackageTourResponseDTO {
   orderTourPackageId: number,
   tourPackageId: number,
@@ -28,6 +29,25 @@ export interface OrderPackageResponseDTO {
   expiredAt: Date,
 }
 
+export interface OrderPackageTourQueryDTO {
+  page?: string;
+  limit?: string;
+  sortBy?: string;
+  order?: "asc" | "desc";
+  filterBy?: string;
+  filterValue?: string;
+}
+
+export interface MetaOrderPackageTourDTO {
+  page: number;
+  limit: number;
+  totalPages: number;
+  totalData: number;
+  sortBy: string;
+  order: "asc" | "desc";
+  filterBy: string;
+  filterValue: string;
+}
 
 
 export type AddOrderPackagePayloadDTO = z.infer<

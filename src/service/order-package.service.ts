@@ -7,7 +7,9 @@ import { v4 as uuidv4 } from 'uuid';
 import type {
   AddOrderPackagePayloadDTO,
   CreateOrderPackageTourResponseDTO,
+  MetaOrderPackageTourDTO,
   OrderPackageResponseDTO,
+  OrderPackageTourQueryDTO,
   VerifyPaymentPayloadDTO,
   VerifyPaymentResponseDTO,
 } from "../dtos/order-package.dto.js";
@@ -110,12 +112,39 @@ const OrderPackageService = () => {
 
   };
 
-  const getOrderPackage = async (user: UserDataInToken) => {
+  const getOrderPackage = async (user: UserDataInToken, queryParams: OrderPackageTourQueryDTO) => {
+
+    const { page, limit } = queryParams
+
+    const pageNum: number = parseInt(page ?? "1", 10);
+    const limitNum: number = parseInt(limit ?? "10", 10);
+
+    const take: number = limitNum;
+    const skip: number = (pageNum - 1) * limitNum;
+
+
+    const filterBy = queryParams.filterBy ?? "payment_status";
+    const filterValue = queryParams.filterValue ?? "";
+
+
+    const sortBy = queryParams.sortBy ?? "created_at"
+    const order = queryParams.order ?? "desc"
+
+
     const result = await prisma.order_package_tour.findMany({
+      take: take,
+      skip: skip,
+      orderBy: {
+        [sortBy]: order
+      },
       where: {
         customer_id: {
           equals: user?.userId
-        }
+        },
+        [filterBy]: {
+          contains: filterValue,
+          mode: "insensitive",
+        },
       },
       select: {
         order_tour_package_id: true,
@@ -148,9 +177,22 @@ const OrderPackageService = () => {
       }
     });
 
-    console.log("result", user, result, )
+    const totalData = await prisma.order_package_tour.count({
+      orderBy: {
+        [sortBy]: order
+      },
+      where: {
+        [filterBy]: {
+          contains: filterValue,
+          mode: "insensitive",
+        },
+      },
+    });
 
-    const convertedResult: OrderPackageResponseDTO[] = result.map((order) => {
+
+    console.log("result", user, result,)
+
+    const resultOrderPackage: OrderPackageResponseDTO[] = result.map((order) => {
       return {
         orderTourPackageId: order.order_tour_package_id as number,
         packageTourName: order.package_tour_product.name_package as string,
@@ -169,6 +211,25 @@ const OrderPackageService = () => {
         expiredAt: order.expired_at as Date
       };
     });
+
+    const convertedResult: {
+      data: OrderPackageResponseDTO[],
+      meta: MetaOrderPackageTourDTO
+    } = {
+      data: resultOrderPackage,
+      meta: {
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(totalData / take),
+        totalData: totalData,
+        sortBy: sortBy,
+        order: order,
+        filterBy: filterBy,
+        filterValue: filterValue
+      }
+    }
+
+
 
     return convertedResult;
   };

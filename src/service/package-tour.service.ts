@@ -95,6 +95,7 @@ const PackageTourService = () => {
                 page: pageNum,
                 limit: limitNum,
                 totalPages: Math.ceil(totalData / take),
+                totalData: totalData,
                 sortBy: sortBy,
                 order: order,
                 filterBy: filterBy,
@@ -143,7 +144,7 @@ const PackageTourService = () => {
                 number_of_guests: true
             }
         })
-        
+
 
         if (!result) {
             throw createError("No data found", 404);
@@ -158,7 +159,7 @@ const PackageTourService = () => {
             endDate: result.end_date as Date,
             activities: result.activities as IActivity[],
             quota: result.quota as number,
-            quotaRemaining: (result.quota as number) - (ordered_package_tour._sum.number_of_guests ?? 0),   
+            quotaRemaining: (result.quota as number) - (ordered_package_tour._sum.number_of_guests ?? 0),
             hostelryPartnerId: result.hostelry_partner_id as number,
             hostelryPartnerName: result?.hostelry_partner?.hostelry_name as string,
             hostelryPartnerLocation: result?.hostelry_partner?.hostelry_location as string,

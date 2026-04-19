@@ -36,6 +36,7 @@ export interface MetaDataPackageTourDTO {
     page: number;
     limit: number;
     totalPages: number;
+    totalData: number;
     sortBy: string;
     order: "asc" | "desc";
     filterBy: string;
