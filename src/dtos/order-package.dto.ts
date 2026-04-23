@@ -61,3 +61,12 @@ export interface VerifyPaymentResponseDTO {
   referenceNumber: string;
   paymentStatus: string;
 }
+
+
+export interface TransactionPaymentLogDTO {
+  paymentStatusLog: string;
+  createdAtLog: Date
+}
+export interface OrderPackageTourDetailResponseDTO extends OrderPackageResponseDTO {
+  transactionPaymentLogs: TransactionPaymentLogDTO[]
+}

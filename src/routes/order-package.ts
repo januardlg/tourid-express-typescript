@@ -4,7 +4,7 @@ import { Router } from "express";
 import passport from "../utils/passport-authenticate.js";
 
 // routes
-import { addOrderPackageController, getOrderPackageController, verifyPaymentTransactionController } from "../controller/order-package.controller.js";
+import { addOrderPackageController, getOrderPackageController, getOrderPackageDetailController, verifyPaymentTransactionController } from "../controller/order-package.controller.js";
 
 // Validation Schema
 import { validateData } from "../middlewares/validation-payload.js";
@@ -76,6 +76,8 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   getOrderPackageController
 );
+
+router.get("/:orderPackageId", passport.authenticate("jwt", { session: false }), getOrderPackageDetailController)
 
 router.post(
   "/",

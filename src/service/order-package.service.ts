@@ -9,12 +9,15 @@ import type {
   CreateOrderPackageTourResponseDTO,
   MetaOrderPackageTourDTO,
   OrderPackageResponseDTO,
+  OrderPackageTourDetailResponseDTO,
   OrderPackageTourQueryDTO,
+  TransactionPaymentLogDTO,
   VerifyPaymentPayloadDTO,
   VerifyPaymentResponseDTO,
 } from "../dtos/order-package.dto.js";
 import type { UserDataInToken } from "../dtos/user.dto.js";
 import { PAYMENT_STATUS, TRIGGER_SOURCE } from "../lib/enum.js";
+import { createError } from "../utils/handle-response.js";
 
 const OrderPackageService = () => {
   const addOrderPackage = async (
@@ -46,7 +49,7 @@ const OrderPackageService = () => {
       })
 
       if (!product) {
-        throw new Error("Product not found")
+        throw createError('Product Not Found', 404)
       }
 
       // count availabilty quota
@@ -235,6 +238,92 @@ const OrderPackageService = () => {
   };
 
 
+
+  const getOrderPackageDetail = async (user: UserDataInToken, orderPackageId: number) => {
+    const resultOrderPackageDetail = await prisma.order_package_tour.findUnique({
+      where: {
+        order_tour_package_id: orderPackageId,
+        customer_id: {
+          equals: user?.userId
+        },
+      },
+      select: {
+        order_tour_package_id: true,
+        package_tour_product: {
+          select: {
+            name_package: true,
+            start_date: true,
+            end_date: true,
+            hostelry_partner: {
+              select: {
+                hostelry_name: true,
+                hostelry_location: true,
+                hostelry_address: true
+              }
+            }
+          }
+        },
+        payment_status: true,
+        payment_methods: {
+          select: {
+            name: true,
+            destination_account: true
+          }
+        },
+        number_of_guests: true,
+        total_payment: true,
+        reference_number: true,
+        created_at: true,
+        expired_at: true,
+        payment_order_package_transaction: {
+          orderBy: {
+            created_at: "asc"
+          },
+          select: {
+            payment_status: true,
+            created_at: true
+          }
+        }
+      }
+    })
+
+    if (!resultOrderPackageDetail) {
+      throw createError("No data found", 404);
+    }
+
+    const order = resultOrderPackageDetail;
+
+    const paymentLogs: TransactionPaymentLogDTO[] = order.payment_order_package_transaction.map((log) => {
+      return {
+        createdAtLog: log.created_at,
+        paymentStatusLog: log.payment_status
+      }
+    })
+
+    const convertedResult: OrderPackageTourDetailResponseDTO = {
+      orderTourPackageId: order.order_tour_package_id as number,
+      packageTourName: order.package_tour_product.name_package as string,
+      packageTourStartDate: order.package_tour_product.start_date as Date,
+      packageTourEndDate: order.package_tour_product.end_date as Date,
+      hostelryName: order.package_tour_product.hostelry_partner?.hostelry_name as string,
+      hostelryLocation: order.package_tour_product.hostelry_partner?.hostelry_location as string,
+      hostelryAddress: order.package_tour_product.hostelry_partner?.hostelry_address as string,
+      paymentStatus: order.payment_status as string,
+      paymentMethodName: order.payment_methods.name as string,
+      paymentDestinationAccount: order.payment_methods.destination_account as string,
+      numberOfGuests: order.number_of_guests as number,
+      totalPayment: order.total_payment.toString(),
+      referenceNumber: order.reference_number as string,
+      createdAt: order.created_at as Date,
+      expiredAt: order.expired_at as Date,
+      transactionPaymentLogs: paymentLogs
+    };
+
+
+    return convertedResult
+  }
+
+
   const verifyPaymentTransaction = async (data: VerifyPaymentPayloadDTO) => {
 
     return prisma.$transaction(async (tx) => {
@@ -279,7 +368,7 @@ const OrderPackageService = () => {
     })
   }
 
-  return { addOrderPackage, getOrderPackage, verifyPaymentTransaction };
+  return { addOrderPackage, getOrderPackage, getOrderPackageDetail, verifyPaymentTransaction };
 };
 
 export default OrderPackageService;
