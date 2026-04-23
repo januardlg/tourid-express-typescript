@@ -12,12 +12,13 @@ import type {
   OrderPackageTourDetailResponseDTO,
   OrderPackageTourQueryDTO,
   TransactionPaymentLogDTO,
-  VerifyPaymentPayloadDTO,
-  VerifyPaymentResponseDTO,
+  ConfirmPaymentPayloadDTO,
+  ConfirmPaymentResponseDTO,
 } from "../dtos/order-package.dto.js";
 import type { UserDataInToken } from "../dtos/user.dto.js";
 import { PAYMENT_STATUS, TRIGGER_SOURCE } from "../lib/enum.js";
 import { createError } from "../utils/handle-response.js";
+import type { IActivity } from "../dtos/package-tour.dto.js";
 
 const OrderPackageService = () => {
   const addOrderPackage = async (
@@ -72,7 +73,7 @@ const OrderPackageService = () => {
       const totalBill = (product?.cost as unknown as number * payload.numberOfGuests)
 
       if (totalBill !== parseInt(payload.totalPayment, 10)) {
-        throw new Error("Wrong Amount")
+        throw createError("Total payment is not valid", 300)
       }
 
       // insert order data
@@ -254,6 +255,8 @@ const OrderPackageService = () => {
             name_package: true,
             start_date: true,
             end_date: true,
+            activities: true,
+            description: true,
             hostelry_partner: {
               select: {
                 hostelry_name: true,
@@ -306,6 +309,8 @@ const OrderPackageService = () => {
       packageTourStartDate: order.package_tour_product.start_date as Date,
       packageTourEndDate: order.package_tour_product.end_date as Date,
       hostelryName: order.package_tour_product.hostelry_partner?.hostelry_name as string,
+      packageTourActivities: order.package_tour_product.activities as unknown as IActivity[],
+      packageTourDescription: order.package_tour_product.description as string,
       hostelryLocation: order.package_tour_product.hostelry_partner?.hostelry_location as string,
       hostelryAddress: order.package_tour_product.hostelry_partner?.hostelry_address as string,
       paymentStatus: order.payment_status as string,
@@ -324,7 +329,7 @@ const OrderPackageService = () => {
   }
 
 
-  const verifyPaymentTransaction = async (data: VerifyPaymentPayloadDTO) => {
+  const confirmPaymentTransaction = async (data: ConfirmPaymentPayloadDTO) => {
 
     return prisma.$transaction(async (tx) => {
 
@@ -358,7 +363,7 @@ const OrderPackageService = () => {
         }
       })
 
-      const convertedResult: VerifyPaymentResponseDTO = {
+      const convertedResult: ConfirmPaymentResponseDTO = {
         orderTourPackageId: result.order_tour_package_id,
         referenceNumber: result.reference_number,
         paymentStatus: result.payment_status,
@@ -368,7 +373,7 @@ const OrderPackageService = () => {
     })
   }
 
-  return { addOrderPackage, getOrderPackage, getOrderPackageDetail, verifyPaymentTransaction };
+  return { addOrderPackage, getOrderPackage, getOrderPackageDetail, confirmPaymentTransaction };
 };
 
 export default OrderPackageService;

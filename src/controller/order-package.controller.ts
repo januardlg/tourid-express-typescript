@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 
 // DTO
 import type { UserDataInToken } from "../dtos/user.dto.js";
-import type { AddOrderPackagePayloadDTO, CreateOrderPackageTourResponseDTO, MetaOrderPackageTourDTO, OrderPackageResponseDTO, OrderPackageTourDetailResponseDTO, OrderPackageTourQueryDTO, VerifyPaymentPayloadDTO, VerifyPaymentResponseDTO } from "../dtos/order-package.dto.js";
+import type { AddOrderPackagePayloadDTO, CreateOrderPackageTourResponseDTO, MetaOrderPackageTourDTO, OrderPackageResponseDTO, OrderPackageTourDetailResponseDTO, OrderPackageTourQueryDTO, ConfirmPaymentPayloadDTO, ConfirmPaymentResponseDTO } from "../dtos/order-package.dto.js";
 
 // service
 import OrderPackageService from "../service/order-package.service.js";
@@ -79,24 +79,24 @@ export const getOrderPackageDetailController = async (
 
 }
 
-export const verifyPaymentTransactionController = async (
+export const confirmPaymentTransactionController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { verifyPaymentTransaction } = OrderPackageService();
+    const { confirmPaymentTransaction } = OrderPackageService();
 
-    const payload: VerifyPaymentPayloadDTO = req.body;
+    const payload: ConfirmPaymentPayloadDTO = req.body;
 
-    const resultVerifyPayment = await verifyPaymentTransaction(payload);
+    const resultConfirmPayment = await confirmPaymentTransaction(payload);
 
     res.json(
-      createResponse<VerifyPaymentResponseDTO>(
+      createResponse<ConfirmPaymentResponseDTO>(
         200,
         "success",
         "success order a package tour",
-        resultVerifyPayment
+        resultConfirmPayment
       )
     );
   } catch (error) {

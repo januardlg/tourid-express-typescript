@@ -1,5 +1,6 @@
 import type { z } from "zod";
-import type { addOrderPackagePayloadSchema, VerifyPaymentPayloadSchema } from "../validation-schema/order-package.valid-schema.js";
+import type { addOrderPackagePayloadSchema, ConfirmPaymentPayloadSchema } from "../validation-schema/order-package.valid-schema.js";
+import type { IActivity } from "./package-tour.dto.js";
 
 
 export interface CreateOrderPackageTourResponseDTO {
@@ -54,9 +55,9 @@ export type AddOrderPackagePayloadDTO = z.infer<
   typeof addOrderPackagePayloadSchema
 >;
 
-export type VerifyPaymentPayloadDTO = z.infer<typeof VerifyPaymentPayloadSchema>;
+export type ConfirmPaymentPayloadDTO = z.infer<typeof ConfirmPaymentPayloadSchema>;
 
-export interface VerifyPaymentResponseDTO {
+export interface ConfirmPaymentResponseDTO {
   orderTourPackageId: number;
   referenceNumber: string;
   paymentStatus: string;
@@ -68,5 +69,7 @@ export interface TransactionPaymentLogDTO {
   createdAtLog: Date
 }
 export interface OrderPackageTourDetailResponseDTO extends OrderPackageResponseDTO {
-  transactionPaymentLogs: TransactionPaymentLogDTO[]
+  transactionPaymentLogs: TransactionPaymentLogDTO[],
+  packageTourDescription: string;
+  packageTourActivities: IActivity[],
 }
