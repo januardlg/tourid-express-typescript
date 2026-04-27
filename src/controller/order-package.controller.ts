@@ -9,6 +9,7 @@ import OrderPackageService from "../service/order-package.service.js";
 
 // utils
 import { createResponse } from "../utils/handle-response.js";
+import { PAYMENT_STATUS } from "../lib/enum.js";
 
 export const addOrderPackageController = async (
   req: Request,
@@ -27,7 +28,7 @@ export const addOrderPackageController = async (
       createResponse<CreateOrderPackageTourResponseDTO>(
         200,
         "success",
-        "success order a package tour",
+        "Success order a package tour, complete payment before expired",
         resultAddOrder
       )
     );
@@ -91,14 +92,26 @@ export const confirmPaymentTransactionController = async (
 
     const resultConfirmPayment = await confirmPaymentTransaction(payload);
 
-    res.json(
-      createResponse<ConfirmPaymentResponseDTO>(
-        200,
-        "success",
-        "success order a package tour",
-        resultConfirmPayment
-      )
-    );
+    if(resultConfirmPayment.paymentStatus === PAYMENT_STATUS.WAITING_VERIFICATION){
+      res.json(
+        createResponse<ConfirmPaymentResponseDTO>(
+          200,
+          "success",
+          "Success order a package tour, please wait for our verification",
+          resultConfirmPayment
+        )
+      );
+    } else {
+      res.json(
+        createResponse<ConfirmPaymentResponseDTO>(
+          202,
+          "success update payment status",
+          "Your payment is expired, contact our customer for refund",
+          resultConfirmPayment
+        )
+      );
+    }
+
   } catch (error) {
     next(error);
   }

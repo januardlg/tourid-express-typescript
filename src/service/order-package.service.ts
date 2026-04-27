@@ -50,7 +50,7 @@ const OrderPackageService = () => {
       })
 
       if (!product) {
-        throw createError('Product Not Found', 404)
+        throw createError('Product is not found, check your input', 404)
       }
 
       // count availabilty quota
@@ -67,13 +67,13 @@ const OrderPackageService = () => {
       const bookedGuests = ordered_package_tour._sum.number_of_guests ?? 0
 
       if (product.quota - bookedGuests < payload.numberOfGuests) {
-        throw new Error("Tour quota is not available")
+        throw createError("Tour quota is not available", 422)
       }
 
       const totalBill = (product?.cost as unknown as number * payload.numberOfGuests)
 
       if (totalBill !== parseInt(payload.totalPayment, 10)) {
-        throw createError("Total payment is not valid", 300)
+        throw createError("Total payment is not valid, check your input", 422)
       }
 
       // insert order data
@@ -338,7 +338,7 @@ const OrderPackageService = () => {
       })
 
       if (!orderPackage) {
-        throw new Error("There is No Pending Payment Order")
+        throw createError("Your order is not found, please check your order again", 404);
       }
 
       const expiredPaymentTime = new Date(orderPackage.expired_at)
