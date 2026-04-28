@@ -421,7 +421,8 @@ const swaggerOptions: Options = {
             },
         },
     },
-    apis: ['./src/**/*.ts'], // Path to your API route files containing JSDoc comments
+    // apis: ['./src/**/*.ts'], // Path to your API route files containing JSDoc comments
+    apis: ["./dist/**/*.js"]
 }
 
 export default swaggerOptions;
