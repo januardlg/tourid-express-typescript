@@ -47,12 +47,12 @@ app.use('/external-bank', externalBankRoutes)
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-const options = {
-    explorer: true,
-    customCss: theme.getBuffer(SwaggerThemeNameEnum.DARK)
-};
+// const options = {
+//     explorer: true,
+//     customCss: theme.getBuffer(SwaggerThemeNameEnum.DARK)
+// };
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, options));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 app.use(function (req, res, next) {
