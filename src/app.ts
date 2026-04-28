@@ -52,7 +52,20 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 //     customCss: theme.getBuffer(SwaggerThemeNameEnum.DARK)
 // };
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// FOR VERCEL => PREVENT STATIC ERROR ACCESS SWAGGER ASSET INSTEAD CDN
+app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec, {
+        customCssUrl: "https://unpkg.com/swagger-ui-dist/swagger-ui.css",
+        customJs: [
+            "https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js",
+            "https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js",
+        ],
+    })
+);
 
 
 app.use(function (req, res, next) {
