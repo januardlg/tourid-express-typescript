@@ -55,18 +55,33 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // FOR VERCEL => PREVENT STATIC ERROR ACCESS SWAGGER ASSET INSTEAD CDN
+// app.use(
+//     "/api-docs",
+//     swaggerUi.serve,
+//     swaggerUi.setup(swaggerSpec, {
+//         customCssUrl: "https://unpkg.com/swagger-ui-dist/swagger-ui.css",
+//         customJs: [
+//             "https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js",
+//             "https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js",
+//         ],
+//     })
+// );
+
 app.use(
     "/api-docs",
     swaggerUi.serve,
     swaggerUi.setup(swaggerSpec, {
-        customCssUrl: "https://unpkg.com/swagger-ui-dist/swagger-ui.css",
+        swaggerOptions: {
+            persistAuthorization: true,
+        },
+        customCssUrl:
+            "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css",
         customJs: [
-            "https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js",
-            "https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js",
+            "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js",
+            "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-standalone-preset.js",
         ],
     })
 );
-
 
 app.use(function (req, res, next) {
     res.status(404).json({ success: false, message: "Route not found" });
