@@ -87,37 +87,10 @@ const router = Router()
  *                      type: array
  *                      items:
  *                       $ref: '#/components/schemas/PackageTourResponse'
+ *                     meta:
+ *                       $ref: '#/components/schemas/MetaResponse'
  *       500:
  *         description: internal server error
- *
- * /packageTour/{id}:
- *  get:
- *      summary: Retrieve detail a Package Tour
- *      tags: [Package-Tour]
- *      parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The Package Tour id
- *      responses:
- *       200:
- *         description: The object of Package Tour
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: '#/components/schemas/BaseResponse'
- *                 - type: object
- *                   properties:
- *                     data:
- *                       $ref: '#/components/schemas/PackageTourResponse'
- *       404:
- *         description: data not found
- *       500:
- *         description: internal server error
- * 
  *  post:
  *      summary: Add package tour product
  *      tags: [Package-Tour]
@@ -148,7 +121,35 @@ const router = Router()
  *       404:
  *         description: not permitted
  *       500:
- *         description: internal server error      
+ *         description: internal server error  
+ * /packageTour/{id}:
+ *  get:
+ *      summary: Retrieve detail a Package Tour
+ *      tags: [Package-Tour]
+ *      parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The Package Tour id
+ *      responses:
+ *       200:
+ *         description: The object of Package Tour
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/BaseResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/PackageTourResponse'
+ *       404:
+ *         description: data not found
+ *       500:
+ *         description: internal server error
+ *     
  */
 
 router.get("/", getAllPackageTourController)
