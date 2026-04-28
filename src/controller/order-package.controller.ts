@@ -2,13 +2,14 @@ import type { Request, Response, NextFunction } from "express";
 
 // DTO
 import type { UserDataInToken } from "../dtos/user.dto.js";
-import type { AddOrderPackagePayloadDTO, CreateOrderPackageTourResponseDTO, OrderPackageResponseDTO, VerifyPaymentPayloadDTO, VerifyPaymentResponseDTO } from "../dtos/order-package.dto.js";
+import type { AddOrderPackagePayloadDTO, CreateOrderPackageTourResponseDTO, MetaOrderPackageTourDTO, OrderPackageResponseDTO, OrderPackageTourDetailResponseDTO, OrderPackageTourQueryDTO, ConfirmPaymentPayloadDTO, ConfirmPaymentResponseDTO } from "../dtos/order-package.dto.js";
 
 // service
 import OrderPackageService from "../service/order-package.service.js";
 
 // utils
 import { createResponse } from "../utils/handle-response.js";
+import { PAYMENT_STATUS } from "../lib/enum.js";
 
 export const addOrderPackageController = async (
   req: Request,
@@ -27,7 +28,7 @@ export const addOrderPackageController = async (
       createResponse<CreateOrderPackageTourResponseDTO>(
         200,
         "success",
-        "success order a package tour",
+        "Success order a package tour, complete payment before expired",
         resultAddOrder
       )
     );
@@ -37,7 +38,7 @@ export const addOrderPackageController = async (
 };
 
 export const getOrderPackageController = async (
-  req: Request,
+  req: Request<{}, {}, {}, OrderPackageTourQueryDTO>,
   res: Response,
   next: NextFunction
 ) => {
@@ -46,34 +47,71 @@ export const getOrderPackageController = async (
 
     const user: UserDataInToken = req.user as UserDataInToken
 
-    const orders = await getOrderPackage(user);
+    const orderedPackageTour = await getOrderPackage(user, req.query);
 
-    res.json(createResponse<OrderPackageResponseDTO[]>(200, "success", "success get orders", orders));
+    res.json(createResponse<OrderPackageResponseDTO[], MetaOrderPackageTourDTO>(200, "success", "success get orders", orderedPackageTour.data, orderedPackageTour.meta));
   } catch (error) {
     next(error);
   }
 };
 
-export const verifyPaymentTransactionController = async (
+export const getOrderPackageDetailController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+
+  try {
+
+    const { orderPackageId } = req.params
+
+    const id = parseInt(orderPackageId ?? "", 10)
+    const user: UserDataInToken = req.user as UserDataInToken
+
+
+    const { getOrderPackageDetail } = OrderPackageService();
+
+    const resultOrderPackageDetail = await getOrderPackageDetail(user, id)
+
+    res.json(createResponse<OrderPackageTourDetailResponseDTO>(200, 'success', 'success get order detail', resultOrderPackageDetail))
+  } catch (error) {
+    next(error);
+  }
+
+}
+
+export const confirmPaymentTransactionController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { verifyPaymentTransaction } = OrderPackageService();
+    const { confirmPaymentTransaction } = OrderPackageService();
 
-    const payload: VerifyPaymentPayloadDTO = req.body;
+    const payload: ConfirmPaymentPayloadDTO = req.body;
 
-    const resultVerifyPayment = await verifyPaymentTransaction(payload);
+    const resultConfirmPayment = await confirmPaymentTransaction(payload);
 
-    res.json(
-      createResponse<VerifyPaymentResponseDTO>(
-        200,
-        "success",
-        "success order a package tour",
-        resultVerifyPayment
-      )
-    );
+    if(resultConfirmPayment.paymentStatus === PAYMENT_STATUS.WAITING_VERIFICATION){
+      res.json(
+        createResponse<ConfirmPaymentResponseDTO>(
+          200,
+          "success",
+          "Success order a package tour, please wait for our verification",
+          resultConfirmPayment
+        )
+      );
+    } else {
+      res.json(
+        createResponse<ConfirmPaymentResponseDTO>(
+          202,
+          "success update payment status",
+          "Your payment is expired, contact our customer for refund",
+          resultConfirmPayment
+        )
+      );
+    }
+
   } catch (error) {
     next(error);
   }

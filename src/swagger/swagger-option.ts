@@ -41,6 +41,56 @@ const swaggerOptions: Options = {
                         }
                     },
                 },
+                MetaResponse: {
+                    type: 'object',
+                    properties: {
+                        page: {
+                            type: 'integer',
+                        },
+                        limit: {
+                            type: 'integer',
+                        },
+                        totalPages: {
+                            type: 'integer',
+                        },
+                        totalData: {
+                            type: 'integer',
+                        },
+                        sortBy: {
+                            type: 'string',
+                        },
+                        order: {
+                            type: 'string',
+                            enum: ['asc', 'desc'],
+                        },
+                        filterBy: {
+                            type: 'string',
+                        },
+                        filterValue: {
+                            type: 'string',
+                        },
+                    },
+                    required: [
+                        'page',
+                        'limit',
+                        'totalPages',
+                        'totalData',
+                        'sortBy',
+                        'order',
+                        'filterBy',
+                        'filterValue',
+                    ],
+                    example: {
+                        page: 1,
+                        limit: 10,
+                        totalPages: 5,
+                        totalData: 50,
+                        sortBy: 'createdAt',
+                        order: 'asc',
+                        filterBy: 'status',
+                        filterValue: 'active',
+                    },
+                },
                 BlogCreate: {
                     type: "object",
                     properties: {
@@ -169,6 +219,72 @@ const swaggerOptions: Options = {
                         updatedAt: '2025-09-18T08:46:59.432Z'
                     }
                 },
+                OrderPackageDetailResponse: {
+                    type: "object",
+                    properties: {
+                        orderTourPackageId: { type: "string", description: "name of package tour" },
+                        packageTourName: { type: "string", description: "name of package tour" },
+                        tourPackageId: { type: "integer", description: "Id of order" },
+                        status: { type: "string", description: "status of order" },
+                        paymentMethod: { type: "string", description: "Payment method of order" },
+                        numberOfGuests: { type: "integer", description: "Number of guests" },
+                        totalPayment: { type: "string", description: "Total of payment" },
+                        transactionPaymentLogs: { type: "array", description: "Transaction logs" },
+                        packageTourDescription: { type: "string", description: "Package tour description" },
+                        packageTourActivities: { type: "array", description: "Activities list of the package tour product" },
+                        createdAt: { type: "string", format: 'date', description: "The date the book was added", example: '2025-09-18T08:46:59.432Z' },
+                        updatedAt: { type: "string", format: 'date', description: "The date the book was updated", example: '2025-09-18T08:46:59.432Z' },
+                    },
+                    example: {
+                        orderTourPackageId: 1,
+                        packageTourName: 'Bali Tour',
+                        tourPackageId: 4,
+                        status: 'NEW',
+                        paymentMethod: "TRANSFER_BANK",
+                        numberOfGuests: 2,
+                        totalPayment: "1000000",
+                        transactionPaymentLogs: [
+                            {
+                                paymentStatusLog: 'PENDING',
+                                createdAtLog: '2025-10-18T08:46:59.432Z'
+                            },
+                        ],
+                        packageTourDescription: 'Description of Medan tour....',
+                        packageTourActivities: [
+                            {
+                                day: "1",
+                                title: "Traditional Market"
+                            }
+                        ],
+                        createdAt: '2025-09-18T08:46:59.432Z',
+                        updatedAt: '2025-09-18T08:46:59.432Z'
+                    }
+                },
+                ConfirmPaymentPayload: {
+                    type: "object",
+                    properties: {
+                        referenceNumber: { type: "string", description: "Reference Number  of Transaction" },
+                        orderTourPackageId: { type: "integer", description: "Order Id" }
+                    },
+                    required: ['referenceNumber', 'orderTourPackageId'],
+                    example: {
+                        referenceNumber: 'TRF-UUID',
+                        orderTourPackageId: 4
+                    },
+                },
+                ConfirmPaymentResponse: {
+                    type: "object",
+                    properties: {
+                        orderTourPackageId: { type: "integer", description: "Order Id" },
+                        referenceNumber: { type: "string", description: "Reference Number  of Transaction" },
+                        paymentStatus: { type: "string", description: "Payment Status" },
+                    },
+                    example: {
+                        orderTourPackageId: 4,
+                        referenceNumber: 'TRF-UUID',
+                        paymentStatus: 'PENDING'
+                    },
+                },
                 PackageTourCreate: {
                     type: "object",
                     properties: {
@@ -207,11 +323,12 @@ const swaggerOptions: Options = {
                         startDate: { type: "string", description: "Start date of the package tour product" },
                         endDate: { type: "string", description: "End date of the package tour product" },
                         activities: { type: "array", description: "Activities list of the package tour product" },
+                        quotaRemaining: { type: "integer", description: "Quota remaining for order package tour" },
                         createdAt: { type: "string", format: 'date', description: "The date the book was added", example: '2025-09-18T08:46:59.432Z' },
                         updatedAt: { type: "string", format: 'date', description: "The date the book was updated", example: '2025-09-18T08:46:59.432Z' },
                         hostelryPartnerId: { type: "integer", description: "Hosterly partner of the package tour product" },
                         hostelryPartnerName: { type: "string", description: "hostelryPartnerName list of the package tour product" },
-
+                        hostelryAddress: { type: 'string', description: "hostelry location link " }
                     },
                     example: {
                         packageId: 9,
@@ -305,6 +422,6 @@ const swaggerOptions: Options = {
         },
     },
     apis: ['./src/**/*.ts'], // Path to your API route files containing JSDoc comments
-};
+}
 
 export default swaggerOptions;

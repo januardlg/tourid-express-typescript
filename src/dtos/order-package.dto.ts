@@ -1,5 +1,7 @@
 import type { z } from "zod";
-import type { addOrderPackagePayloadSchema, VerifyPaymentPayloadSchema } from "../validation-schema/order-package.valid-schema.js";
+import type { addOrderPackagePayloadSchema, ConfirmPaymentPayloadSchema } from "../validation-schema/order-package.valid-schema.js";
+import type { IActivity } from "./package-tour.dto.js";
+
 
 export interface CreateOrderPackageTourResponseDTO {
   orderTourPackageId: number,
@@ -17,6 +19,7 @@ export interface OrderPackageResponseDTO {
   packageTourEndDate: Date;
   hostelryName: string;
   hostelryLocation: string;
+  hostelryAddress: string;
   paymentStatus: string;
   paymentMethodName: string;
   paymentDestinationAccount: string;
@@ -27,16 +30,46 @@ export interface OrderPackageResponseDTO {
   expiredAt: Date,
 }
 
+export interface OrderPackageTourQueryDTO {
+  page?: string;
+  limit?: string;
+  sortBy?: string;
+  order?: "asc" | "desc";
+  filterBy?: string;
+  filterValue?: string;
+}
+
+export interface MetaOrderPackageTourDTO {
+  page: number;
+  limit: number;
+  totalPages: number;
+  totalData: number;
+  sortBy: string;
+  order: "asc" | "desc";
+  filterBy: string;
+  filterValue: string;
+}
 
 
 export type AddOrderPackagePayloadDTO = z.infer<
   typeof addOrderPackagePayloadSchema
 >;
 
-export type VerifyPaymentPayloadDTO = z.infer<typeof VerifyPaymentPayloadSchema>;
+export type ConfirmPaymentPayloadDTO = z.infer<typeof ConfirmPaymentPayloadSchema>;
 
-export interface VerifyPaymentResponseDTO {
+export interface ConfirmPaymentResponseDTO {
   orderTourPackageId: number;
   referenceNumber: string;
   paymentStatus: string;
+}
+
+
+export interface TransactionPaymentLogDTO {
+  paymentStatusLog: string;
+  createdAtLog: Date
+}
+export interface OrderPackageTourDetailResponseDTO extends OrderPackageResponseDTO {
+  transactionPaymentLogs: TransactionPaymentLogDTO[],
+  packageTourDescription: string;
+  packageTourActivities: IActivity[],
 }

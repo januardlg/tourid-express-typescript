@@ -24,6 +24,8 @@ export interface PackageTourProductDTO {
     activities: IActivity[],
     hostelryPartnerId: number,
     quota: number,
+    quotaRemaining?: number;
+    hostelryAddress?: string;
     hostelryPartnerName?: string;
     hostelryPartnerLocation?: string;
     createdAt: Date,
@@ -34,6 +36,7 @@ export interface MetaDataPackageTourDTO {
     page: number;
     limit: number;
     totalPages: number;
+    totalData: number;
     sortBy: string;
     order: "asc" | "desc";
     filterBy: string;
