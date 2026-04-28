@@ -1,5 +1,5 @@
 // import type { Options } from "swagger-jsdoc";
-
+const isDev = process.env.NODE_ENV === "development";
 
 const swaggerOptions = {
     definition: {
@@ -11,8 +11,10 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://tourid-express-typescript.vercel.app',
-                description: 'Development' + process.env.NODE_ENV,
+                url: isDev
+                    ? "http://localhost:3000"
+                    : "https://tourid-express-typescript.vercel.app",
+                description: isDev ? "Development server" : "Production server",
             },
         ],
         components: {
@@ -422,7 +424,7 @@ const swaggerOptions = {
         },
     },
     // apis: ['./src/**/*.ts'], // Path to your API route files containing JSDoc comments
-    apis: ["./dist/**/*.js"]
+    apis: ["./src/**/*.ts"],
 }
 
 export default swaggerOptions;
