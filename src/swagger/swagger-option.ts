@@ -1,7 +1,7 @@
-import type { Options } from "swagger-jsdoc";
+// import type { Options } from "swagger-jsdoc";
 
 
-const swaggerOptions: Options = {
+const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
         info: {
@@ -12,7 +12,7 @@ const swaggerOptions: Options = {
         servers: [
             {
                 url: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://tourid-express-typescript.vercel.app',
-                description: 'Development server',
+                description: 'Development' + process.env.NODE_ENV,
             },
         ],
         components: {

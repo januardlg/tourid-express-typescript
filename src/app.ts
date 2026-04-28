@@ -8,7 +8,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerOptions from './swagger/swagger-option.js';
 
-import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes'
+// import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes'
 
 import cookieParser from 'cookie-parser'
 
@@ -23,7 +23,7 @@ import paymentMethodRoutes from './routes/payment-method.js'
 import externalBankRoutes from './routes/external-dummy-bank.js'
 
 const app = express();
-const theme = new SwaggerTheme();
+// const theme = new SwaggerTheme();
 
 app.use(express.json());
 app.use(morgan("dev"));
@@ -55,33 +55,36 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // FOR VERCEL => PREVENT STATIC ERROR ACCESS SWAGGER ASSET INSTEAD CDN
-// app.use(
-//     "/api-docs",
-//     swaggerUi.serve,
-//     swaggerUi.setup(swaggerSpec, {
-//         customCssUrl: "https://unpkg.com/swagger-ui-dist/swagger-ui.css",
-//         customJs: [
-//             "https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js",
-//             "https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js",
-//         ],
-//     })
-// );
-
 app.use(
     "/api-docs",
     swaggerUi.serve,
     swaggerUi.setup(swaggerSpec, {
         swaggerOptions: {
-            persistAuthorization: true,
+            persistAuthorization: true
         },
-        customCssUrl:
-            "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css",
+        customCssUrl: "https://unpkg.com/swagger-ui-dist/swagger-ui.css",
         customJs: [
-            "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js",
-            "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-standalone-preset.js",
+            "https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js",
+            "https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js",
         ],
     })
 );
+
+// app.use(
+//     "/api-docs",
+//     swaggerUi.serve,
+//     swaggerUi.setup(swaggerSpec, {
+//         swaggerOptions: {
+//             persistAuthorization: true,
+//         },
+//         customCssUrl:
+//             "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css",
+//         customJs: [
+//             "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js",
+//             "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-standalone-preset.js",
+//         ],
+//     })
+// );
 
 app.use(function (req, res, next) {
     res.status(404).json({ success: false, message: "Route not found" });
