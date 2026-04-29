@@ -1,7 +1,7 @@
-// import type { Options } from "swagger-jsdoc";
+import type { Options } from "swagger-jsdoc";
 const isDev = process.env.NODE_ENV === "development";
 
-const swaggerOptions = {
+const swaggerOptions: Options = {
     definition: {
         openapi: '3.0.0',
         info: {
@@ -424,7 +424,7 @@ const swaggerOptions = {
         },
     },
     // apis: ['./src/**/*.ts'], // Path to your API route files containing JSDoc comments
-    apis: ["./src/**/*.ts"],
+    apis: ["./src/**/*.js"],
 }
 
 export default swaggerOptions;
