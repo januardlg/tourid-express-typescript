@@ -181,17 +181,17 @@ const swaggerOptions: Options = {
                     type: "object",
                     properties: {
                         tourPackageId: { type: "integer", description: "Id of order" },
-                        paymentMethod: { type: "string", description: "Payment method of order" },
+                        paymentMethod: { type: "integer", description: "Payment method of order" },
                         numberOfGuests: { type: "integer", description: "Number of guests" },
                         totalPayment: { type: "string", description: "Total of payment" },
 
                     },
                     required: ['tourPackageId', 'paymentMethod', 'numberOfGuests', 'totalPayment'],
                     example: {
-                        tourPackageId: 4,
-                        paymentMethod: "TRANSFER_BANK",
+                        tourPackageId: 2,
+                        paymentMethodId: 1,
                         numberOfGuests: 2,
-                        totalPayment: 1000000,
+                        totalPayment: "88000"
                     }
                 },
                 OrderPackageResponse: {
@@ -295,8 +295,9 @@ const swaggerOptions: Options = {
                         endDate: { type: "string", description: "End date of the package tour product" },
                         hostelryPartnerId: { type: "integer", description: "Hosterly partner of the package tour product" },
                         activities: { type: "array", description: "Activities list of the package tour product" },
+                        quota: { type: "integer", description: "Quota for this tour" },
                     },
-                    required: ['packageName', 'cost', 'description', 'startDate', 'endDate', 'hostelryPartnerId', 'activities'],
+                    required: ['packageName', 'cost', 'description', 'startDate', 'endDate', 'hostelryPartnerId', 'activities', 'quota'],
                     example: {
                         packageName: "Medan Tour",
                         cost: 40000,
@@ -309,9 +310,9 @@ const swaggerOptions: Options = {
                                 title: "Traditional Market"
                             }
                         ],
-                        hosterlyPartnerId: 4
+                        hosterlyPartnerId: 4,
+                        quota: 8
                     }
-
                 },
                 PackageTourResponse: {
                     type: "object",
