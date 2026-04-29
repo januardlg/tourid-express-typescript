@@ -8,7 +8,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerOptions from './swagger/swagger-option.js';
 
-// import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes'
+import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes'
 
 import cookieParser from 'cookie-parser'
 
@@ -23,7 +23,7 @@ import paymentMethodRoutes from './routes/payment-method.js'
 import externalBankRoutes from './routes/external-dummy-bank.js'
 
 const app = express();
-// const theme = new SwaggerTheme();
+const theme = new SwaggerTheme();
 
 app.use(express.json());
 app.use(morgan("dev"));
@@ -55,6 +55,8 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // FOR VERCEL => PREVENT STATIC ERROR ACCESS SWAGGER ASSET INSTEAD CDN
+
+const darkCss = theme.getBuffer(SwaggerThemeNameEnum.DARK)
 app.get("/api-docs.json", (req, res) => {
     res.json(swaggerSpec);
 });
@@ -66,7 +68,10 @@ app.get("/api-docs", (req, res) => {
       <head>
         <title>API Docs</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css" />
-      </head>
+        <style>
+        ${darkCss.toString()}
+        </style>
+        </head>
       <body>
         <div id="swagger-ui"></div>
 
