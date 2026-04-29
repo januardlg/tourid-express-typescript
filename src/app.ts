@@ -55,39 +55,40 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // FOR VERCEL => PREVENT STATIC ERROR ACCESS SWAGGER ASSET INSTEAD CDN
-// app.use(
-//     "/api-docs",
-//     swaggerUi.serve,
-//     swaggerUi.setup(swaggerSpec, {
-//         swaggerOptions: {
-//             persistAuthorization: true
-//         },
-//         customCssUrl: "https://unpkg.com/swagger-ui-dist/swagger-ui.css",
-//         customJs: [
-//             "https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js",
-//             "https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js",
-//         ],
-//     })
-// );
+app.get("/api-docs.json", (req, res) => {
+    res.json(swaggerSpec);
+});
 
-app.use(
-    "/api-docs",
-    swaggerUi.serve,
-    swaggerUi.setup(swaggerSpec, {
-        swaggerOptions: {
-            persistAuthorization: true,
-        },
+app.get("/api-docs", (req, res) => {
+    res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>API Docs</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css" />
+      </head>
+      <body>
+        <div id="swagger-ui"></div>
 
-        // CDN (INI SUDAH BENAR YANG KAMU PAKAI 👍)
-        customCssUrl:
-            "https://unpkg.com/swagger-ui-dist/swagger-ui.css",
+        <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
 
-        customJs: [
-            "https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js",
-            "https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js",
-        ],
-    })
-);
+        <script>
+          SwaggerUIBundle({
+            url: "/api-docs.json",
+            dom_id: "#swagger-ui",
+            presets: [
+              SwaggerUIBundle.presets.apis,
+              SwaggerUIStandalonePreset
+            ],
+            layout: "BaseLayout",
+            persistAuthorization: true
+          });
+        </script>
+      </body>
+    </html>
+  `);
+});
 
 app.use(function (req, res, next) {
     res.status(404).json({ success: false, message: "Route not found" });
