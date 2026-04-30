@@ -41,6 +41,9 @@ export default serverless(app);
 
 ---
 
+## Deploy on Vercel
+Feel free to check the result : https://tourid-express-typescript.vercel.app/api-docs/
+
 ## Connection To Databae
 ### Prisma Singleton Connection 
 This project uses a **Prisma singleton connection** pattern to ensure that only **one PrismaClient instance is created per serverless instance**.
