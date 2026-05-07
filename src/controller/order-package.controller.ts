@@ -65,7 +65,7 @@ export const getOrderPackageDetailController = async (
 
     const { orderPackageId } = req.params
 
-    const id = parseInt(orderPackageId ?? "", 10)
+    const id = parseInt(orderPackageId as string, 10)
     const user: UserDataInToken = req.user as UserDataInToken
 
 
@@ -92,7 +92,7 @@ export const confirmPaymentTransactionController = async (
 
     const resultConfirmPayment = await confirmPaymentTransaction(payload);
 
-    if(resultConfirmPayment.paymentStatus === PAYMENT_STATUS.WAITING_VERIFICATION){
+    if (resultConfirmPayment.paymentStatus === PAYMENT_STATUS.WAITING_VERIFICATION) {
       res.json(
         createResponse<ConfirmPaymentResponseDTO>(
           200,

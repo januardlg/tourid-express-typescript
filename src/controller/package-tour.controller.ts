@@ -38,7 +38,7 @@ export const getDetailPackageTourController = async (
 
         const { packageTourId } = req.params
 
-        const id = parseInt(packageTourId ?? "", 10)
+        const id = parseInt(packageTourId as string, 10)
 
         const { getDetailPackageTour } = PackageTourService()
 

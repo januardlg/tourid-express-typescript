@@ -22,7 +22,7 @@ export const getDetailBlogController = async (req: Request, res: Response, next:
 
     const { getDetailBlog } = BlogsService()
 
-    const id = parseInt(blogId ?? "", 10)
+    const id = parseInt(blogId as string, 10)
 
     try {
         const detailBlog = await getDetailBlog(id)
@@ -54,7 +54,7 @@ export const editBlogController = async (req: Request, res: Response, next: Next
 
     try {
         const payload: CreateBlogPayloadDTO = req.body
-        const blogId: number = parseInt(req.params.blogId ?? "", 10)
+        const blogId: number = parseInt(req.params.blogId as string, 10)
 
 
         const resultUpdate = await editBlog(payload, blogId)
@@ -79,7 +79,7 @@ export const deleteBlogController = async (req: Request, res: Response, next: Ne
 
     const { blogId } = req.params
 
-    const id = parseInt(blogId ?? "", 10)
+    const id = parseInt(blogId as string, 10)
 
     try {
         const resultDelete = await deleteBlog(id)
