@@ -4,7 +4,6 @@ import morgan from "morgan";
 
 import { unexpectedErrorHandler } from './middlewares/unexpected-error-handler.js';
 
-import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerOptions from './swagger/swagger-option.js';
 
@@ -58,11 +57,11 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 const darkCss = theme.getBuffer(SwaggerThemeNameEnum.DARK)
 app.get("/api-docs.json", (req, res) => {
-    res.json(swaggerSpec);
+  res.json(swaggerSpec);
 });
 
 app.get("/api-docs", (req, res) => {
-    res.send(`
+  res.send(`
     <!DOCTYPE html>
     <html>
       <head>
@@ -96,7 +95,7 @@ app.get("/api-docs", (req, res) => {
 });
 
 app.use(function (req, res, next) {
-    res.status(404).json({ success: false, message: "Route not found" });
+  res.status(404).json({ success: false, message: "Route not found" });
 });
 
 app.use(unexpectedErrorHandler);
