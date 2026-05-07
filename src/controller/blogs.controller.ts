@@ -2,8 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import BlogsService from "../service/blogs.service.js";
 import { createError, createResponse } from "../utils/handle-response.js";
 import type { CreateBlogPayloadDTO } from "../dtos/blog.dto.js";
-import { Prisma } from "../../generated/prisma/index.js";
-
+import { Prisma } from "@prisma/client";
 
 export const getAllBlogsController = async (req: Request, res: Response, next: NextFunction) => {
 

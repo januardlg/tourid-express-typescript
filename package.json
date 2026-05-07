@@ -1,13 +1,14 @@
 {
   "type": "module",
   "scripts": {
-    "build": "prisma generate && tsc",
-    "start": "node dist/api/server.js",
-    "dev": "NODE_ENV=development nodemon --watch src --ext ts --exec node --loader ts-node/esm src/server.ts",
-    "lint": "eslint 'src/**/*.ts'"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "dev": "NODE_ENV=development tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/src/server.js",
+    "lint": "eslint \"src/**/*.ts\"",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:seed": "tsx prisma/seed.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

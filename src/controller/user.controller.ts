@@ -7,7 +7,7 @@ import type {
   RegisterUserResponseDTO,
 } from "../dtos/user.dto.js";
 import { createError, createResponse } from "../utils/handle-response.js";
-import { Prisma } from "../../generated/prisma/index.js";
+import { Prisma } from "@prisma/client";
 
 export const registerController = async (
   req: Request,

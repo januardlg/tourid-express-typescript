@@ -19,7 +19,7 @@ export const getAllPackageTourController = async (
             createResponse<PackageTourProductDTO[], MetaDataPackageTourDTO>(
                 200,
                 "success",
-                "success get all package tour",
+                "success get all package tou KY",
                 resultAllPackageTour?.data,
                 resultAllPackageTour?.meta
             )
