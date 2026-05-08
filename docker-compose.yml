@@ -1,0 +1,35 @@
+services:
+  # Express App Service
+  tourid_be:
+    # 1. Build express app image from Dockerfile
+    build: .
+    # 2. Create image name
+    image: tourid_be_images
+    # 3. create container name
+    container_name: tourid_be_container
+    ports:
+      - "3000:3000"
+    # 4. pulls all variables from .env.development file
+    env_file:
+      - .env.development
+    environment:
+      # Override the value found in .env.development
+      - DATABASE_URL=postgresql://tourid:password@tourid_postgres_db:5432/tourid_data_dev
+    depends_on:
+      - tourid_postgres_db
+
+  # This is your Database service
+  tourid_postgres_db:
+    image: postgres:16
+    container_name: postgres_tourid_container
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: tourid
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tourid_data_dev
+    volumes:
+      - tourid_data_volume:/var/lib/postgresql/data
+
+volumes:
+  tourid_data_volume:

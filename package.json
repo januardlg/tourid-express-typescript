@@ -5,10 +5,10 @@
     "build": "tsc",
     "start": "node dist/src/server.js",
     "lint": "eslint \"src/**/*.ts\"",
-    "prisma:generate": "npx prisma generate",
+    "prisma:generate:dev": "dotenv -e .env.development -- npx prisma generate",
     "prisma:migrate:dev": "dotenv -e .env.development -- npx prisma migrate dev",
-    "prisma:migrate:deploy": "npx prisma migrate deploy",
-    "prisma:seed": "tsx prisma/seed.ts"
+    "prisma:seed:dev": "dotenv -e .env.development -- tsx prisma/seed.ts",
+    "prisma:migrate:deploy": "npx prisma migrate deploy"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
