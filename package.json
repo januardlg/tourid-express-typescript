@@ -5,9 +5,9 @@
     "build": "tsc",
     "start": "node dist/src/server.js",
     "lint": "eslint \"src/**/*.ts\"",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate:dev": "prisma migrate dev",
-    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate:dev": "dotenv -e .env.development -- npx prisma migrate dev",
+    "prisma:migrate:deploy": "npx prisma migrate deploy",
     "prisma:seed": "tsx prisma/seed.ts"
   },
   "devDependencies": {
@@ -21,6 +21,7 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "dotenv": "^17.2.2",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9.35.0",
     "express": "^5.1.0",
     "install": "^0.13.0",
