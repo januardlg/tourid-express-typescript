@@ -20,8 +20,7 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 
 # generate Prisma client
-# RUN npx prisma generate
-RUN npm run prisma:generate 
+RUN npx prisma generate
 
 # Build typscript
 RUN npm run build
