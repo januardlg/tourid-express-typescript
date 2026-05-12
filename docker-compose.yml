@@ -14,11 +14,12 @@ services:
       - .env.development
     environment:
       # Override the value found in .env.development
+      # connect to database using private docker network using database service name instead localhost
       - DATABASE_URL=postgresql://tourid:password@tourid_postgres_db:5432/tourid_data_dev
     depends_on:
       - tourid_postgres_db
 
-  # This is your Database service
+  # Database service
   tourid_postgres_db:
     image: postgres:16
     container_name: postgres_tourid_container
