@@ -1,4 +1,155 @@
-## Environment
+# tour.id Backend — Express API (MVP)
+
+This is the backend service for **tour.id**, built using Express.js.  
+It provides APIs for tour browsing, booking, checkout, and payment verification.
+
+The project focuses on implementing a clean and scalable backend architecture with authentication, database management, and API documentation.
+
+---
+
+## Live Demo
+
+🌐 https://tourid-express-typescript.vercel.app/ 
+
+You can explore the deployed API and test available endpoints.
+---
+
+## Features (MVP Scope)
+
+- Get tour list with filtering  
+- Get tour detail  
+- Checkout tour package  
+- Payment verification  
+- Payment Confirmation
+- Get user booked tours  
+- JWT-based authentication  
+
+---
+
+## Tech Stack
+
+### Backend Framework
+- Express.js  
+
+### Authentication
+- Passport.js (JWT Strategy)  
+
+### Database
+- PostgreSQL  
+- Prisma ORM  
+
+### API Documentation
+- Swagger UI  
+- Available at: `/api-docs`  
+
+---
+
+## Architecture Highlights
+
+- **RESTful API design**  
+- **JWT authentication using Passport**  
+- **Prisma ORM for type-safe database queries**  
+- **Layered structure (controller → service → repository)**  
+- **Environment-based configuration**  
+
+---
+
+## Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone <your-repo-url>
+cd <your-project-folder>
+```
+
+### 2. Setup Environment Variables
+Create a .env file in the root directory:
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/tourdb"
+JWT_SECRET="your_secret_key"
+PORT=3000
+```
+
+### 3. Install Dependencies
+```bash
+    npm install
+```
+
+### 4. Setup Database (Prisma)
+```bash
+    npm run prisma:generate:dev
+    npm run prisma:migrate:dev
+    npm run prisma:seed:dev
+```
+
+### 5. Run the Server
+```bash
+    npm run dev
+```
+
+## Run with Docker
+This project includes Docker support for both Express API and PostgreSQL database.
+
+### 1. Build & Start Container
+```bash 
+docker compose up --build 
+```
+
+### 2. Run Prisma Migration & Seed
+Make sure the container is running before executing Prisma commands.
+```bash
+    npm run prisma:migrate:dev
+    npm run prisma:seed:dev
+```
+
+## Project Structure
+```
+```
+
+## API Documentation
+Swagger documentation is available at:
+```
+ http://localhost:3000/api-docs
+```
+Include :
+- Endpoint list
+- Request/response schema
+- Data contract
+
+## Authentication
+
+This API uses **JWT (JSON Web Token)** for authentication.
+
+- Token is generated after login  
+- Protected routes require `Authorization: Bearer <token>` header  
+- Passport middleware is used to validate requests  
+
+---
+
+## Future Improvements
+
+- Refresh token mechanism  
+- Rate limiting & security hardening  
+- Logging & monitoring (Winston / Morgan)  
+- Unit & integration testing  
+- CI/CD pipeline  
+- Production-ready deployment (Docker + cloud infra)  
+
+---
+
+## Why This Project?
+
+This backend was built to:
+
+- Practice building a **real-world REST API with Express**  
+- Implement **JWT authentication using Passport**  
+- Use **Prisma ORM with PostgreSQL**  
+- Design a **clean and maintainable backend architecture**  
+
+
+
+## Vercel Environment
 ### Local Development
 
 During local development, the project runs using a conventional server (app.listen()) that stays active and listens for requests continuously. _Why conventional server locally?_
@@ -41,6 +192,9 @@ export default serverless(app);
 
 ---
 
+## Deploy on Vercel
+Feel free to check the result : https://tourid-express-typescript.vercel.app/api-docs/
+
 ## Connection To Databae
 ### Prisma Singleton Connection 
 This project uses a **Prisma singleton connection** pattern to ensure that only **one PrismaClient instance is created per serverless instance**.
@@ -65,157 +219,6 @@ if (process.env.NODE_ENV !== "production") {
 
 
 ```
-
-## Data Contract
-
-This project uses shared TypeScript interfaces as data contracts between the frontend and Express backend.
-The goal is to ensure:
-- Type safety across layers
-- Clear API boundaries
-- Easier refactoring when contracts evolve
-
----
-#### Common
-##### BaseResponse
-- statusCode: number
-- status: string
-- message: string
-##### Notes
-- All response will extend this `BaseResponse` and data will be wrapped using key `data`
-
-### MetaResponse
-- page: number
-- limit: number
-- totalPage: number
-
-### Core Contract: Register
-#### RegisterRequest
-- username: string (required, 5-20 characters)
-- email: string (required, email format)
-- password: string (required, min 8 characters and at least 1 uppercase and at least 1 number)
-
-##### Notes
-- validation is for both frontend and backend
-
-#### RegisterResponse
-- username: string
-- email: string
-- isAdmin: boolean (default: false)
-
-##### Notes
-- `password` is never returned in any response.
-- `isAdmin` is assigned by the system and can not be set by request.
-
----
-### Core Contract: Login
-#### LoginRequest
-- email: string (required)
-- password: string (required, min 8 characters and at least 1 uppercase and at least 1 number)
-
-#### LoginResponse
-- accessToken: string
-##### Notes
-- `accessToken` is using for access authorized API
-
----
-### Core Contract: Refresh Token
-#### RefreshTokenResponse
-- accessToken: string
-
----
-### Core Contract: Get Package Tour Data
-#### PackageTourListQuery
-- page : number (integer, min 1)
-- limit : number (integer, min 1)
-- sortBy : string (refer to field)
-- order : "asc"|"desc"
-- filterBy: string (refer to field)
-- filterValue: string
-##### Notes
--  all query parameters default value defined on backend
-- Query parameters are received as strings and parsed to integers when needed (`page`, `limit`).
-
-#### PackageTourListResponse
-- packageId: number
-- packageName: string
-- cost: string(decimal)
-- description: string
-- startDate: string ISO 8601
-- endDate: string ISO 8601
-- activities:Activity[]
-- hostelryPartnerName: string
-- createdAt: string ISO 8601
-- updatedAt: string ISO 8601
-#### Activity
-- day: number
-- destinations: string[]
-##### Notes
-- PackageTourResponse is wrap in `data` and extends the `MetaResponse` and `BaseResponse`
-- `cost` is represented as string to avoid floating precision issue
-
----
-### Core Contract: Add Package Tour Data
-#### PackageTourRequest
-- packageName: string  (required, 10-60 characters)
-- cost: string(decimal) (required)
-- description: string (required, text, min 20 characters)
-- startDate: string ISO 8601 (required)
-- endDate: string ISO 8601 (required)
-- activities:Activity[] (required)
-- hostelryPartnerId: number (required, refer to hosterly partner data)
-### Authentication
-- This requires a valid user token to be provided via request `headers`.
-
-#### PackageTourResponse
-- packageId: number 
-- packageName: string
-- createdAt: string ISO 8601
-- updatedAt: string ISO 8601
-
----
-### Core Contract: Get Package Tour Detail Data
-#### PackageTourDetailResponse
-- packageId: number
-- packageName: string
-- cost: string(decimal)
-- description: string
-- startDate: string ISO 8601
-- endDate: string ISO 8601
-- activities:Activity[]
-- hostelryPartnerName: string
-- hosterlyPartnerLocation: string
-- createdAt: string ISO 8601
-- updatedAt: string ISO 8601
-
----
-### Core Contract: Create Order Package Tour
-#### OrderPackageTourRequest
-- tourPackageId: number (required, refer to Package Tour )
-- paymentMethodId: numnber (required, refer to payment method)
-- numberOfGuests: number (requried)
-- totalPayment: string (decimal) (requried)
-
-#### CreateOrderPackageTourResponse
-- orderTourPackageId: number
-- tourPackageId: number
-- paymentMethodId: number
-- paymentStatus : string
-- totalPayment: string (decimal)
-- referenceNumber: string
-- expiredAt: string ISO 8601
-
-### Core Contract: Get Order Package Tour
-#### OrderPackageTourResponse
-- orderTourPackageId: number
-- packageTourName: string
-- paymentStatus : string
-- paymentMethodName: string
-- paymentDestinationAccount: string
-- numberOfGuests: string
-- totalPayment: string (decimal) (requried)
-- referenceNumber: string
-- createdAt: string ISO 8601
-- expiredAt: string ISO 8601
 
 
 
