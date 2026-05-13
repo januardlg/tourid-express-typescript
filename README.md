@@ -67,7 +67,8 @@ cd <your-project-folder>
 Create a .env file in the root directory:
 ```env
 DATABASE_URL="postgresql://user:password@localhost:5432/tourdb"
-JWT_SECRET="your_secret_key"
+secretKey="your_secret_key"
+secretKeyRefreshToken="your_secret_key"
 PORT=3000
 ```
 
