@@ -3,12 +3,13 @@ import Userservice from "../service/user.service.js";
 import type {
   LoginResponseDTO,
   LoginUserPayloadDTO,
-  RegisterUserPayloadDTO,
-  RegisterUserResponseDTO,
+  // RegisterUserPayloadDTO,
+  // RegisterUserResponseDTO,
 } from "../dtos/user.dto.js";
 import { createError, createResponse } from "../utils/handle-response.js";
-import { Prisma } from "@prisma/client";
+// import { Prisma } from "../../generated/prisma/index.js";
 
+/*
 export const registerController = async (
   req: Request,
   res: Response,
@@ -35,11 +36,12 @@ export const registerController = async (
     next(error)
   }
 };
+*/
 
 export const LoginController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const { loginUser } = Userservice();
   const payload: LoginUserPayloadDTO = req.body;
@@ -47,44 +49,50 @@ export const LoginController = async (
   try {
     const loginResponse = await loginUser(payload);
 
-
-    // Assigning refresh token in http-only cookie 
-    res.cookie('jwt', loginResponse.refreshToken, {
+    // Assigning refresh token in http-only cookie
+    res.cookie("jwt", loginResponse.refreshToken, {
       httpOnly: true,
-      sameSite: 'none', secure: true,
-      maxAge: 24 * 60 * 60 * 1000
+      sameSite: "none",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.json(
-      createResponse<LoginResponseDTO>(200, "success", "success login user", { accessToken: loginResponse.accessToken })
+      createResponse<LoginResponseDTO>(200, "success", "success login user", {
+        accessToken: loginResponse.accessToken,
+      }),
     );
   } catch (error) {
     next(error);
   }
 };
 
-
-export const getNewAccessTokenController = async (req: Request,
+export const getNewAccessTokenController = async (
+  req: Request,
   res: Response,
-  next: NextFunction) => {
-
+  next: NextFunction,
+) => {
   if (req.cookies?.jwt) {
     const refreshToken: string = req.cookies.jwt;
 
     const { getNewAccessToken } = Userservice();
 
     try {
-      const resultNewAccessToken = await getNewAccessToken(refreshToken)
+      const resultNewAccessToken = await getNewAccessToken(refreshToken);
 
-      console.log({ resultNewAccessToken })
-      res.json(createResponse(200, "success", "success get new access token", resultNewAccessToken))
-
+      console.log({ resultNewAccessToken });
+      res.json(
+        createResponse(
+          200,
+          "success",
+          "success get new access token",
+          resultNewAccessToken,
+        ),
+      );
     } catch (error) {
-      next(error)
+      next(error);
     }
-
   } else {
-    throw createError('Unauthorized', 406)
+    throw createError("Unauthorized", 406);
   }
-
-}
+};

@@ -1,7 +1,9 @@
 import { Router } from "express";
 import { getAllPaymentMethod } from "../controller/payment-methods.controller.js";
+import { commonRateLimiter } from "../middlewares/rate-limit.js";
 
 const router = Router();
+router.use(commonRateLimiter)
 
 /**
  * @swagger

@@ -152,6 +152,7 @@ const swaggerOptions: Options = {
                         token: 'token....'
                     }
                 },
+                /*
                 RegisterUser: {
                     type: "object",
                     properties: {
@@ -179,6 +180,7 @@ const swaggerOptions: Options = {
                         isAdmin: 'false'
                     }
                 },
+                */
                 OrderPackageCreate: {
                     type: "object",
                     properties: {

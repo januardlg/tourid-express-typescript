@@ -6,9 +6,11 @@ import { addBlogController, deleteBlogController, editBlogController, getAllBlog
 // validation request body
 import { validateData } from "../middlewares/validation-payload.js";
 import { createBlogPayloadSchema } from "../validation-schema/blog.valid-schema.js";
+import { commonRateLimiter } from "../middlewares/rate-limit.js";
 
 
 const router = Router()
+router.use(commonRateLimiter)
 
 /**
  * @swagger
