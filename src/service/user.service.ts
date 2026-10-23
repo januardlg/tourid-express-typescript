@@ -15,31 +15,23 @@ import type {
 } from "../dtos/user.dto.js";
 import { createError } from "../utils/handle-response.js";
 
-
-
 const Userservice = () => {
-
-
-
   const generateAccessToken = (user: Partial<UserDataInToken>) => {
-
     const accessToken = jwt.sign(
       {
         userId: user?.userId,
         username: user?.username,
         email: user?.email,
-        isAdmin: user?.isAdmin
+        isAdmin: user?.isAdmin,
       },
       process.env.secretKey as string,
       {
         expiresIn: 3600,
-      }
+      },
     );
 
-    return accessToken
-
-  }
-
+    return accessToken;
+  };
 
   const generatedRefreshToken = (user: Partial<UserDataInToken>) => {
     const refreshToken = jwt.sign(
@@ -47,17 +39,18 @@ const Userservice = () => {
         userId: user?.userId,
         username: user?.username,
         email: user?.email,
-        isAdmin: user?.isAdmin
+        isAdmin: user?.isAdmin,
       },
       process.env.secretKeyRefreshToken as string,
       {
-        expiresIn: '1d'
-      }
+        expiresIn: "1d",
+      },
     );
 
-    return refreshToken
-  }
+    return refreshToken;
+  };
 
+  /*
   const registerUser = async (payload: RegisterUserPayloadDTO) => {
     const hashedPassword = await bycript.hash(payload.password, 10);
 
@@ -83,6 +76,7 @@ const Userservice = () => {
 
     return convertedResult;
   };
+  */
 
   const loginUser = async (payload: LoginUserPayloadDTO) => {
     const existingUser = await prisma.users.findUnique({
@@ -97,7 +91,7 @@ const Userservice = () => {
 
     const isPasswordValid = await bycript.compare(
       payload.password,
-      existingUser.password
+      existingUser.password,
     );
 
     if (!isPasswordValid) {
@@ -108,46 +102,42 @@ const Userservice = () => {
       userId: existingUser?.user_id,
       email: existingUser?.email,
       username: existingUser?.username,
-      isAdmin: existingUser?.is_admin
-    }
+      isAdmin: existingUser?.is_admin,
+    };
 
+    const accessToken = generateAccessToken(convertExistingUser);
 
-    const accessToken = generateAccessToken(convertExistingUser)
-
-    const refreshToken = generatedRefreshToken(convertExistingUser)
+    const refreshToken = generatedRefreshToken(convertExistingUser);
 
     const convertedResult: LoginUseResponse = {
       accessToken: accessToken,
-      refreshToken: refreshToken
+      refreshToken: refreshToken,
     };
 
     return convertedResult;
   };
 
-
   const getNewAccessToken = async (refreshToken: string) => {
-
-    let newToken
-    jwt.verify(refreshToken, process.env.secretKeyRefreshToken as string, // Verifying refresh token
+    let newToken;
+    jwt.verify(
+      refreshToken,
+      process.env.secretKeyRefreshToken as string, // Verifying refresh token
       async (err, decoded: any) => {
         if (err) {
-
-          throw createError('Unauthorized', 406)
+          throw createError("Unauthorized", 406);
+        } else {
+          newToken = generateAccessToken(decoded);
         }
-        else {
-          newToken = generateAccessToken(decoded)
-        }
-      })
+      },
+    );
 
-
-    return { accessToken: newToken }
-
-  }
+    return { accessToken: newToken };
+  };
 
   return {
-    registerUser,
+    // registerUser,
     loginUser,
-    getNewAccessToken
+    getNewAccessToken,
   };
 };
 

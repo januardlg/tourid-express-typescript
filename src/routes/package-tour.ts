@@ -13,9 +13,11 @@ import { addPackageTourPayloadSchema } from "../validation-schema/package-tour.v
 import { authorizeAdmin } from "../middlewares/authorize.js";
 
 import { getAllPackageTourController, } from "../controller/package-tour.controller.js";
+import { commonRateLimiter } from "../middlewares/rate-limit.js";
 
 
 const router = Router()
+router.use(commonRateLimiter)
 
 /**
  * @swagger
@@ -158,4 +160,3 @@ router.post('/', passport.authenticate("jwt", { session: false }), validateData(
 
 
 export default router
-

@@ -4,9 +4,11 @@ import { validateData } from "../middlewares/validation-payload.js";
 import { VerifyPaidFromBankPayloadSchema } from "../validation-schema/external-dummy-bank.schma.js";
 import { verifyPaymentToPaidController } from "../controller/external-dummy-bank.controller.js";
 import { authorizeAdmin } from "../middlewares/authorize.js";
+import { commonRateLimiter } from "../middlewares/rate-limit.js";
 
 
 const router = Router()
+router.use(commonRateLimiter)
 
 /**
  * @swagger

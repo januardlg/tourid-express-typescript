@@ -9,8 +9,10 @@ import { addOrderPackageController, getOrderPackageController, getOrderPackageDe
 // Validation Schema
 import { validateData } from "../middlewares/validation-payload.js";
 import { addOrderPackagePayloadSchema, ConfirmPaymentPayloadSchema } from "../validation-schema/order-package.valid-schema.js";
+import { commonRateLimiter } from "../middlewares/rate-limit.js";
 
 const router = Router();
+router.use(commonRateLimiter)
 
 
 /**
